@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Shield, ChevronRight, Layers, Car, Heart, Plane, Home } from "lucide-react";
+import { LiquidGlassCard } from "./ui/blocks-bg";
 
 const tabs = [
   // { id: "all", label: "Все", icon: Layers, count: 6 },
@@ -44,50 +45,31 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden">
-      {/* Background gradient */}
+    <section className="relative min-h-screen flex items-center  pt-16 pb-16 overflow-hidden">
       <div className="absolute inset-0 gradient-hero opacity-95" />
-
-      {/* Decorative elements */}
+      {/* <div className="absolute inset-0 gradient-hero opacity-95" /> */}
       <div className="absolute top-1/4 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl" />
 
-      {/* Floating shapes */}
-      <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-primary-foreground/30 rounded-full animate-float" />
+      {/* <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-primary-foreground/30 rounded-full animate-float" /> */}
       <div className="absolute top-1/2 right-1/3 w-6 h-6 bg-accent/40 rounded-full animate-float" style={{ animationDelay: "1s" }} />
       <div className="absolute bottom-1/3 left-1/3 w-3 h-3 bg-primary-foreground/20 rounded-full animate-float" style={{ animationDelay: "2s" }} />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
-          {/* Header Content */}
           <div className="text-center mt-6">
-            {/* Badge */}
-            {/* <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-foreground/10 backdrop-blur-sm rounded-full border border-primary-foreground/20 mb-6 animate-fade-in">
-              <Shield className="w-4 h-4 text-primary-foreground" />
-              <span className="text-sm font-medium text-primary-foreground">Надёжная страховая защита</span>
-            </div> */}
-
-            {/* Headline */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground mb-4 leading-tight animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground mb-4 leading-tight animate-fade-in " style={{ animationDelay: "0.1s" }}>
               Sug‘urta — tez, oson va onlayn
               <br />
-              {/* <span className="opacity-90">за 2 минуты</span> */}
             </h1>
-
-            {/* Subheadline */}
-            <p className="text-xl text-primary-foreground/90 mb-6 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <p className="text-2xl text-primary-foreground/90 mb-6 max-w-2xl mx-auto animate-fade-in text-[#1a66ff] text-bold" style={{ animationDelay: "0.2s" }}>
               Bir nechta sug‘urta kompaniyalaridan eng yaxshi takliflarni onlayn solishtiring va darhol rasmiylashtiring.
             </p>
           </div>
-
-          {/* Calculator Card */}
           <div className="bg-card rounded-3xl shadow-hero p-6 lg:p-8 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            {/* Card Title */}
             <h2 className="text-xl md:text-2xl font-bold text-foreground text-center mb-6">
               Калькулятор страхования
             </h2>
-
-            {/* Tabs */}
             <div className="flex flex-wrap justify-center gap-2 mb-8">
               {tabs.map((tab) => (
                 <button
@@ -112,12 +94,9 @@ const HeroSection = () => {
               ))}
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit}>
 
-              {/* Form Fields Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-8">
-                {/* License Plate */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="plateNumber"
@@ -136,7 +115,6 @@ const HeroSection = () => {
                   />
                 </div>
 
-                {/* Tech Passport */}
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold text-foreground">
                     Серия и номер ПТС <span className="text-destructive">*</span>
@@ -165,7 +143,6 @@ const HeroSection = () => {
                   </div>
                 </div>
 
-                {/* Drivers Count */}
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold text-foreground">
                     Кол-во водителей
@@ -185,7 +162,6 @@ const HeroSection = () => {
                   </Select>
                 </div>
 
-                {/* Vehicle Type */}
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold text-foreground">
                     Тип автомобиля
@@ -205,7 +181,6 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <div className="flex justify-center">
                 <Button type="submit" size="lg" className="px-12">
                   Рассчитать стоимость
@@ -213,17 +188,6 @@ const HeroSection = () => {
                 </Button>
               </div>
             </form>
-          </div>
-
-          {/* Trust badges */}
-          <div className="mt-10 text-center animate-fade-in" style={{ animationDelay: "0.5s" }}>
-            <p className="text-sm text-primary-foreground/60 mb-4">Нам доверяют более 500 000 клиентов</p>
-            <div className="flex flex-wrap justify-center items-center gap-6 lg:gap-10 opacity-70">
-              <div className="text-primary-foreground font-bold text-lg">Росгосстрах</div>
-              <div className="text-primary-foreground font-bold text-lg">Ингосстрах</div>
-              <div className="text-primary-foreground font-bold text-lg">РЕСО</div>
-              <div className="text-primary-foreground font-bold text-lg">Альфа</div>
-            </div>
           </div>
         </div>
       </div>

@@ -6,11 +6,11 @@ const CTASection = () => {
     <section id="contact" className="py-20 lg:py-32 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 gradient-hero" />
-      
+
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl" />
-
+      <img src="https://images.pexels.com/photos/7875996/pexels-photo-7875996.jpeg?auto=compress&cs=tinysrgb" alt="" className="w-full absolute top-[-60px]" />
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main CTA */}
@@ -18,7 +18,7 @@ const CTASection = () => {
             Готовы оформить страховку?
           </h2>
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto">
-            Начните прямо сейчас и получите полис за несколько минут. 
+            Начните прямо сейчас и получите полис за несколько минут.
             Или свяжитесь с нами для консультации.
           </p>
 

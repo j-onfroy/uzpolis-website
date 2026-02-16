@@ -2,7 +2,7 @@ import { Shield } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-primary-foreground py-16">
+    <footer className="bg-foreground text-primary-foreground py-16 pb-6">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Logo & Description */}
@@ -62,15 +62,10 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-center gap-4">
           <p className="text-primary-foreground/60 text-sm">
             © 2026 UzPolis.
           </p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="text-primary-foreground/60 hover:text-primary transition-colors text-sm">
-              Telegram
-            </a>
-          </div>
         </div>
       </div>
     </footer>

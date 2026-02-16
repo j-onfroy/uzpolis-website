@@ -35,9 +35,13 @@
     --ring: 199 89% 48%;
 
     --radius: 0.75rem;
-
+/* header cover */
     /* Custom tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(172 66% 50%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(229, 66%, 50%) 100%);
+    --home-hero: linear-gradient(180deg, hsl(200, 13%, 95%) 50%, hsl(199 89% 48%) 100%);
+
+    /* --gradient-hero: linear-gradient(180deg, hsl(0, 0%, 97%) 60%, hsl(199 89% 48%) 100%); */
+
     --gradient-hero-light: linear-gradient(135deg, hsl(199 89% 48% / 0.1) 0%, hsl(172 66% 50% / 0.1) 100%);
     --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --shadow-card: 0 4px 24px -4px hsl(199 89% 48% / 0.15);
@@ -109,7 +113,9 @@
   .gradient-hero {
     background: var(--gradient-hero);
   }
-
+  .home-hero {
+    background: var(--home-hero);
+  }
   .gradient-hero-light {
     background: var(--gradient-hero-light);
   }
@@ -133,3 +139,4 @@
     background-clip: text;
   }
 }
+
