@@ -1,14 +1,33 @@
 // import { Button } from "@/components/ui/button";
 import { Shield, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@radix-ui/react-dialog";
 import { Title } from "@radix-ui/react-toast";
 import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isOpen, setOpen] = useState(false)
+  const { i18n, t } = useTranslation()
+  const nav = useNavigate()
+  const lang = [
+    { value: 'uz', label: 'Uzbek' },
+    { value: 'ru', label: 'Русский' },
+    { value: 'en', label: 'English' },
+  ]
   console.log(isOpen, "opne")
+  const onChangeLanguage = (value: any) => {
+    console.log(value, "val")
+    i18n.changeLanguage(value);
+    localStorage.setItem("language", value);
+  }
+  useEffect(()=>{
+    console.log(i18n.languages, "asd")
+    localStorage.setItem("language", "uz")
+  },[])
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -30,16 +49,16 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                E-OSAGO
+                E-OSAGO 
               </a>
-              <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              {/* <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 KASKO
-              </a>
+              </a> */}
               <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 B2B
               </a>
               <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                Hamkorlik
+                {t("collab")}
               </a>
               {/* <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors font-medium">
               Контакты
@@ -48,12 +67,29 @@ const Header = () => {
 
             {/* CTA */}
             <div className="hidden lg:flex items-center shado gap-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <button className=" outline-none text-sm ml-6 md:ml-0">
+                    {lang.find(l => l.value === i18n.language)?.label}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {lang.map(el => (
+                    <DropdownMenuItem
+                      key={el.value}
+                      onClick={() => onChangeLanguage(el.value)}
+                    >
+                      {el.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               {/* <a href="tel:+78001234567" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
               <Phone className="w-4 h-4" />
               <span className="font-medium">8-800-123-45-67</span>
             </a> */}
               {/* <Button onClick={handleRegister}>Shaxsiy kabinet</Button> */}
-              <Button onClick={() => setOpen(true)}>Open Modal</Button>
+              <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
             </div>
 
             {/* Mobile Menu Button */}

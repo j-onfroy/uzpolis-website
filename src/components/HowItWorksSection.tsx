@@ -1,4 +1,5 @@
 import { Search, FileText, CreditCard, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const steps = [
   {
@@ -28,20 +29,23 @@ const steps = [
 ];
 
 const HowItWorksSection = () => {
+  
+  const { t } = useTranslation()
+  const values = t("steps", { returnObjects: true });
   return (
     <section id="how-it-works" className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4">
-            Как это работает
+            {t("how_work.title1")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Получите полис
-            <span className="text-gradient"> за 4 простых шага</span>
+            {t("how_work.title2")}
+            <span className="text-gradient"> {t("how_work.title2_1")} </span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Никакой бюрократии. Всё максимально просто и понятно.
+            {t("how_work.title3")}
           </p>
         </div>
 
@@ -66,8 +70,8 @@ const HowItWorksSection = () => {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-3">{values[index].title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{values[index].description}</p>
                 </div>
 
                 {/* Arrow connector for desktop */}

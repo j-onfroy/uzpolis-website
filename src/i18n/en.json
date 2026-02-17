@@ -1,0 +1,112 @@
+{
+    "main": "Main",
+    "error_msg": "Something went wrong",
+    "collab": "Collaboration",
+    "home_tab": "Main",
+    "category_tab": "Category",
+    "profile_tab": "Profile",
+    "login": {
+        "welcome": "Welcome back",
+        "enter": "Enter your phone number to continue",
+        "continue": "Continue",
+        "info": "By continuing, you agree to our",
+        "tp": "Terms & Privacy Policy"
+    },
+    "home": {
+        "login": "Personal Account",
+        "title1": "Insurance — fast, easy, and online",
+        "title2": "Compare the best offers from multiple insurance companies online and get it done immediately.",
+        "calc": "Insurance Calculator",
+        "state_number": "License Plate Number",
+        "serya": "Technical Passport Series and Number",
+        "drives": "Number of Drivers",
+        "not_limit": "Unlimited",
+        "submit": "Calculate"
+    },
+    "services": {
+        "title1": "Our Services",
+        "title2": "All Types of Insurance",
+        "title2_1": "in one place",
+        "title3": "Choose the right type of insurance and get your policy online in just a few minutes",
+        "popular": "Popular",
+        "more": "Learn More"
+    },
+    "benefit": {
+        "title1": "Benefits",
+        "title2": "Why choose",
+        "title2_1": "us",
+        "title3": "We make insurance simple and accessible for everyone",
+        "customers": "Satisfied Customers",
+        "companies": "Insurance Companies",
+        "avg_time": "Average Processing Time",
+        "positive_reviews": "Positive Reviews",
+        "values": [
+            "500K+",
+            "15+",
+            "5 min",
+            "98%"
+        ],
+        "list": [
+            {
+                "title": "Fast Processing",
+                "description": "Get your policy in 5 minutes without visiting an office. Everything is online."
+            },
+            {
+                "title": "Best Prices",
+                "description": "We compare offers from 15+ companies to find the best price for you."
+            },
+            {
+                "title": "24/7 Support",
+                "description": "Our specialists are always available and ready to help in any situation."
+            },
+            {
+                "title": "Trusted Partners",
+                "description": "We work only with reliable insurance companies with high ratings."
+            },
+            {
+                "title": "Easy Claims",
+                "description": "We help you prepare documents to receive your payouts quickly."
+            },
+            {
+                "title": "Instant Delivery",
+                "description": "Your policy is sent to your email immediately after payment. No printing needed."
+            }
+        ]
+    },
+    "steps": [
+        {
+            "step": "01",
+            "title": "Choose insurance type",
+            "description": "Specify which policy you need: OSAGO, CASCO, VHI, or another type of insurance."
+        },
+        {
+            "step": "02",
+            "title": "Fill in your details",
+            "description": "Enter information about yourself and the insured object. This will take just 2–3 minutes."
+        },
+        {
+            "step": "03",
+            "title": "Compare and pay",
+            "description": "Receive offers from different companies, pick the best one, and pay online."
+        },
+        {
+            "step": "04",
+            "title": "Receive your policy",
+            "description": "Your electronic policy will be sent to your email instantly. It is fully legally valid."
+        }
+    ],
+    "how_work": {
+        "title1": "How It Works",
+        "title2": "Get Your Policy",
+        "title2_1": "In 4 Simple Steps",
+        "title3": "No bureaucracy. Everything is as simple and clear as possible."
+    },
+    "cta": {
+        "title1": "Ready to get insured?",
+        "title2": "Start right now and get your policy in just a few minutes.\nOr contact us for a consultation.",
+        "calc": "Calculate Price",
+        "submit": "Order",
+        "call": "Call Us",
+        "mail": "Email Us"
+    }
+}

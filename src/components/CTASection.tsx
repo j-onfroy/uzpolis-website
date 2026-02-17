@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Phone, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const CTASection = () => {
+  const {t} = useTranslation()
   return (
     <section id="contact" className="py-20 lg:py-32 relative overflow-hidden">
       {/* Background */}
@@ -15,21 +17,20 @@ const CTASection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main CTA */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
-            Готовы оформить страховку?
+            {t("cta.title1")}
           </h2>
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto">
-            Начните прямо сейчас и получите полис за несколько минут.
-            Или свяжитесь с нами для консультации.
+          {t("cta.title2")}
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 shadow-lg">
-              Рассчитать стоимость
+              {t("cta.calc")}
               <ChevronRight className="w-5 h-5" />
             </Button>
             <Button size="lg" variant="heroOutline">
-              Заказать звонок
+              {t("cta.submit")}
             </Button>
           </div>
 
@@ -40,7 +41,7 @@ const CTASection = () => {
                 <Phone className="w-6 h-6 text-primary-foreground" />
               </div>
               <div className="text-left">
-                <p className="text-sm text-primary-foreground/60">Звоните нам</p>
+                <p className="text-sm text-primary-foreground/60">{t("cta.call")}</p>
                 <p className="text-lg font-bold text-primary-foreground">8-800-123-45-67</p>
               </div>
             </div>
@@ -50,7 +51,7 @@ const CTASection = () => {
                 <Mail className="w-6 h-6 text-primary-foreground" />
               </div>
               <div className="text-left">
-                <p className="text-sm text-primary-foreground/60">Пишите нам</p>
+                <p className="text-sm text-primary-foreground/60">{t("cta.mail")}</p>
                 <p className="text-lg font-bold text-primary-foreground">info@strahassist.ru</p>
               </div>
             </div>

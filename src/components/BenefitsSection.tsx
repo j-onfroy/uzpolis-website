@@ -1,4 +1,5 @@
 import { Clock, BadgePercent, HeadphonesIcon, ShieldCheck, FileCheck, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const benefits = [
   {
@@ -34,20 +35,25 @@ const benefits = [
 ];
 
 const BenefitsSection = () => {
+  const { t } = useTranslation()
+  const values = t("benefit.list", { returnObjects: true });
+  console.log(values, "values")
   return (
     <section id="benefits" className="py-20 lg:py-32 bg-secondary/50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4">
-            Преимущества
+            {t("benefit.title1")}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Почему выбирают
-            <span className="text-gradient"> нас</span>
+            {t("benefit.title2")}
+
+            <span className="text-gradient"> {t("benefit.title2_1")}
+            </span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Мы делаем страхование простым и доступным для каждого
+            {t("benefit.title3")}
           </p>
         </div>
 
@@ -65,27 +71,27 @@ const BenefitsSection = () => {
 
               {/* Content */}
               <div>
-                <h3 className="text-lg font-bold text-foreground mb-2">{benefit.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
+                <h3 className="text-lg font-bold text-foreground mb-2">{values[index]?.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{values[index]?.description}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* Stats */}
-        <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { value: "500K+", label: "Довольных клиентов" },
-            { value: "15+", label: "Страховых компаний" },
-            { value: "5 мин", label: "Среднее время оформления" },
-            { value: "98%", label: "Положительных отзывов" },
+            { value: "500K+", label: t("benefit.customers") },
+            { value: "15+", label: t("benefit.companies") },
+            { value: "5 мин", label: t("benefit.avg_time") },
+            { value: "98%", label: t("benefit.positive_reviews") },
           ].map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-4xl lg:text-5xl font-extrabold text-gradient mb-2">{stat.value}</div>
               <div className="text-muted-foreground">{stat.label}</div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

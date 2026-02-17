@@ -1,5 +1,6 @@
 import { Car, Shield, Heart, Home, Plane, Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const services = [
   {
@@ -47,20 +48,24 @@ const services = [
 ];
 
 const ServicesSection = () => {
+  const {t} = useTranslation()
   return (
     <section id="services" className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4">
-            Наши услуги
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Все виды страхования
-            <span className="text-gradient"> в одном месте</span>
+            {t("services.title1")}
+          </span>{" "}
+          <br />
+          <h2 className=" ml-1 text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+           {t("services.title2")}
+            <span className="text-gradient"> {" "}
+             {t("services.title2_1")}
+            </span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Выберите подходящий тип страхования и получите полис онлайн за несколько минут
+           {t("services.title3")}
           </p>
         </div>
 
@@ -76,7 +81,7 @@ const ServicesSection = () => {
             >
               {service.popular && (
                 <div className="absolute -top-3 left-6 px-3 py-1 gradient-hero text-primary-foreground text-xs font-semibold rounded-full">
-                  Популярно
+                  {t("services.popular")}
                 </div>
               )}
               
@@ -93,7 +98,7 @@ const ServicesSection = () => {
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <span className="text-lg font-bold text-primary">{service.price}</span>
                 <Button variant="ghost" size="sm" className="text-primary hover:text-primary">
-                  Подробнее
+                  {t("services.more")}
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
