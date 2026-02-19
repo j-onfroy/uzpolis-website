@@ -1,5 +1,5 @@
 import { Home, Grid2X2, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -10,9 +10,9 @@ type Types = {
     link: string;
 }
 
-
 export default function MobileDock() {
     const [active, setActive] = useState("home");
+    console.log(location.pathname, "path")
     const nav = useNavigate()
     const handleClick = (tab: Types) => {
         setActive(tab.id);
@@ -22,11 +22,15 @@ export default function MobileDock() {
     const tabs: Types[] = [
         { id: "home", label: t("home_tab"), icon: Home, link: "/" },
         { id: "category", label:  t("category_tab"), icon: Grid2X2, link: "/category" },
-        { id: "profile", label:  t("profile_tab"), icon: User, link: "/user/login" },
+        { id: "profile", label:  t("profile_tab"), icon: User, link: "/profile" },
     ];
+    useEffect(()=>{
+        if(location.pathname === '/user/login'){
+            setActive("profile")
+        }
+    },[])
     return (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-md">
-
             {/* Glass container */}
             <div className="flex justify-between items-center px-4 py-2 rounded-2xl backdrop-blur-xl bg-background/80 border border-border shadow-2xl">
 

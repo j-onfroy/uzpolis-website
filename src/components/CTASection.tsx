@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const CTASection = () => {
   const {t} = useTranslation()
   return (
-    <section id="contact" className="py-20 lg:py-32 relative overflow-hidden">
+    <section id="contact" className="hidden lg:flex py-20 lg:py-32 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 gradient-hero" />
 

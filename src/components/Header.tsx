@@ -1,16 +1,16 @@
-// import { Button } from "@/components/ui/button";
-import { Shield, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Dialog } from "@radix-ui/react-dialog";
-import { Title } from "@radix-ui/react-toast";
+import { Shield, Menu, X, CircleUserRound } from "lucide-react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
+  const queryClient = useQueryClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOpen, setOpen] = useState(false)
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+
   const { i18n, t } = useTranslation()
   const nav = useNavigate()
   const lang = [
@@ -18,21 +18,14 @@ const Header = () => {
     { value: 'ru', label: 'Русский' },
     { value: 'en', label: 'English' },
   ]
-  console.log(isOpen, "opne")
   const onChangeLanguage = (value: any) => {
-    console.log(value, "val")
     i18n.changeLanguage(value);
     localStorage.setItem("language", value);
+    queryClient.invalidateQueries();
   }
-  useEffect(()=>{
-    console.log(i18n.languages, "asd")
-    localStorage.setItem("language", "uz")
-  },[])
+  console.log(user, "user")
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setOpen}>
-        <Title>hi</Title>
-      </Dialog>
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-13 lg: h-16">
@@ -49,7 +42,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                E-OSAGO 
+                E-OSAGO
               </a>
               {/* <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 KASKO
@@ -84,12 +77,15 @@ const Header = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {/* <a href="tel:+78001234567" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">8-800-123-45-67</span>
-            </a> */}
-              {/* <Button onClick={handleRegister}>Shaxsiy kabinet</Button> */}
-              <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
+              {
+                user?.phoneNumber ?
+                  <div onClick={() => nav("/profile")} className=" cursor-pointer flex gap-2 text-[#023e8a] items-center p-2 rounded-md border">
+                    <p> {user?.phoneNumber}</p>
+                    <CircleUserRound size={30} color="#023e8a" />
+                  </div>
+                  :
+                  <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
+              }
             </div>
 
             {/* Mobile Menu Button */}

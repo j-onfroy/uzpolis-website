@@ -108,5 +108,22 @@
         "submit": "Buyurtma",
         "call": "Bizga qo‘ng‘iroq qiling",
         "mail": "Bizga yozing"
+    },
+    "profile": {
+        "userInfo": "Profil ma'lumotlari",
+        "verified": "Tasdiqlangan",
+        "not_verif": "Tasdiqlanmagan",
+        "joined": "Qo‘shilgan sana",
+        "wallet": "Hamyon",
+        "balance": "Balans",
+        "cashback": "Keshbek",
+        "referral_bonus": "Bonus",
+        "total_earned": "Jami daromad",
+        "referral": "Yo‘llanmalar",
+        "referal_code": "Referal kod",
+        "referal_link": "Referal havola",
+        "copied": "Nusxa olindi!",
+        "users": "Jalb qilingan foydalanuvchilar",
+        "pur": "Referal xaridlar"
     }
 }

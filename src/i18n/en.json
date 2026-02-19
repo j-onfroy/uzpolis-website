@@ -108,5 +108,22 @@
         "submit": "Order",
         "call": "Call Us",
         "mail": "Email Us"
+    },
+    "profile": {
+        "userInfo": "Profile Information",
+        "verified": "Verified",
+        "not_verif": "Not Verified",
+        "joined": "Joined",
+        "wallet": "Wallet",
+        "balance": "Balance",
+        "cashback": "Cashback",
+        "referral_bonus": "Referral Bonus",
+        "total_earned": "Total Earned",
+        "referral": "Referral",
+        "referal_code": "Referral Code",
+        "referal_link": "Referral Link",
+        "copied": "Copied!",
+        "users": "Referred Users",
+        "pur": "Referral Purchases"
     }
 }

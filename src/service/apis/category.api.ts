@@ -4,8 +4,8 @@ export const getCategory = async () => {
   const { data } = await api.get("/api/v1/categories");
   return data;
 };
+export const getSubCategory = async (categoryId:string) => {
+  const { data } = await api.get(`/api/v1/categories/${categoryId}/sub-categories`);
+  return data;
+};
 
-// export const createUser = async (payload: any) => {
-//   const { data } = await api.post("/users", payload);
-//   return data;
-// };

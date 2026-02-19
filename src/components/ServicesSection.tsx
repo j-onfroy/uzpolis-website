@@ -1,6 +1,7 @@
 import { Car, Shield, Heart, Home, Plane, Briefcase, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import { QueryClient } from "@tanstack/react-query";
 
 const services = [
   {
@@ -48,7 +49,8 @@ const services = [
 ];
 
 const ServicesSection = () => {
-  const {t} = useTranslation()
+  // const data = QueryClient.getQueryData(["category"]);
+  const { t } = useTranslation()
   return (
     <section id="services" className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
@@ -59,13 +61,13 @@ const ServicesSection = () => {
           </span>{" "}
           <br />
           <h2 className=" ml-1 text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-           {t("services.title2")}
+            {t("services.title2")}
             <span className="text-gradient"> {" "}
-             {t("services.title2_1")}
+              {t("services.title2_1")}
             </span>
           </h2>
           <p className="text-lg text-muted-foreground">
-           {t("services.title3")}
+            {t("services.title3")}
           </p>
         </div>
 
@@ -74,9 +76,8 @@ const ServicesSection = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`group relative bg-card rounded-2xl p-6 lg:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 ${
-                service.popular ? "ring-2 ring-primary" : ""
-              }`}
+              className={`group relative bg-card rounded-2xl p-6 lg:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 ${service.popular ? "ring-2 ring-primary" : ""
+                }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {service.popular && (
@@ -84,7 +85,7 @@ const ServicesSection = () => {
                   {t("services.popular")}
                 </div>
               )}
-              
+
               {/* Icon */}
               <div className="w-14 h-14 rounded-xl gradient-hero-light flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <service.icon className="w-7 h-7 text-primary" />
@@ -93,7 +94,7 @@ const ServicesSection = () => {
               {/* Content */}
               <h3 className="text-xl font-bold text-foreground mb-3">{service.title}</h3>
               <p className="text-muted-foreground mb-4 leading-relaxed">{service.description}</p>
-              
+
               {/* Price */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <span className="text-lg font-bold text-primary">{service.price}</span>

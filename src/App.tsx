@@ -9,10 +9,12 @@ import Login from "./pages/Login";
 import "@/i18n/index";
 import ProfilePage from "./pages/ProfilePage";
 import MainLayout from "./layout/MainLayout";
+import Category from "./pages/Category";
 
 const queryClient = new QueryClient();
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+
+  return (<QueryClientProvider client={queryClient}>
     {/* <TooltipProvider> */}
     {/* <Toaster position="top-right" /> */}
     <Toaster />
@@ -23,13 +25,17 @@ const App = () => (
         <Route path="/" element={<MainLayout />} >
           <Route path="/" index element={<Index />} />
           <Route path="/user/login" element={<Login />} />
+          <Route path="/category" element={<Category />} />
+          {/* <Route path="/auth" element={<AuthLayout />} > */}
           <Route path="/profile" element={<ProfilePage />} />
+          {/* </Route> */}
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
     {/* </TooltipProvider> */}
   </QueryClientProvider>
-);
+  )
+};
 
 export default App;

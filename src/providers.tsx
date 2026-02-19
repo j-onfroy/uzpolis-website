@@ -1,11 +1,19 @@
-// app/providers.tsx
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import i18next from "i18next";
 
-import {HeroUIProvider} from '@heroui/react'
+export function useLanguageSync() {
+  const queryClient = useQueryClient();
 
-export function Providers({children}: { children: React.ReactNode }) {
-  return (
-    <HeroUIProvider>
-      {children}
-    </HeroUIProvider>
-  )
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      queryClient.invalidateQueries(); // 🔥 refetch everything
+    };
+
+    i18next.on("languageChanged", handleLanguageChange);
+
+    return () => {
+      i18next.off("languageChanged", handleLanguageChange);
+    };
+  }, [queryClient]);
 }
