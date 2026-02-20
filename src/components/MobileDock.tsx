@@ -12,12 +12,12 @@ type Types = {
 
 export default function MobileDock() {
     const [active, setActive] = useState("home");
-    console.log(location.pathname, "path")
     const nav = useNavigate()
     const handleClick = (tab: Types) => {
         setActive(tab.id);
         nav(tab.link)
     }
+    
     const {t} = useTranslation()
     const tabs: Types[] = [
         { id: "home", label: t("home_tab"), icon: Home, link: "/" },
