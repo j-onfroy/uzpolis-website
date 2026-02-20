@@ -12,7 +12,6 @@ type Types = {
 
 export default function MobileDock() {
     const [active, setActive] = useState("home");
-    console.log(location.pathname, "path")
     const nav = useNavigate()
     const handleClick = (tab: Types) => {
         setActive(tab.id);
