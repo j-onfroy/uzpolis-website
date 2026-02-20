@@ -48,10 +48,8 @@ jobs:
             # Serverni GitHub Registry'ga login qilish (Private imaj uchun)
             sudo docker login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GH_PAT }}
             
-            # Yangi frontend imajini tortib olish
             sudo docker-compose pull uzpolis-web
-            
-            # Faqat frontendni (uzpolis-web) qayta ishga tushirish
+
             sudo docker-compose up -d uzpolis-web
-          
+        
             sudo docker image prune -a -f
