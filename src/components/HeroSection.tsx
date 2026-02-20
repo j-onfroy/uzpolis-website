@@ -117,7 +117,7 @@ const HeroSection = () => {
               <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-background to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10" />
 
               {/* SCROLL CONTAINER */}
-              <div className="flex overflow-x-auto whitespace-nowrap gap-2 mb-6 lg:mb-8 custom-scroll px-2">
+              {/* <div className="flex overflow-x-auto whitespace-nowrap gap-2 mb-6 lg:mb-8 custom-scroll px-2">
                 {isLoading ? (
                   <p>Loading...</p>
                 ) : (
@@ -145,10 +145,10 @@ const HeroSection = () => {
                     </button>
                   ))
                 )}
-              </div>
+              </div> */}
             </div>
             {/* second */}
-            <div className="flex overflow-x-auto whitespace-nowrap gap-2 mb-6 lg:mb-8 custom-scroll px-2">
+            {/* <div className="flex overflow-x-auto whitespace-nowrap gap-2 mb-6 lg:mb-8 custom-scroll px-2">
               {isSubLoading ? (
                 <p>Loading...</p>
               ) : dataSub?.length === 0 ? (
@@ -178,7 +178,7 @@ const HeroSection = () => {
                   </button>
                 ))
               )}
-            </div>
+            </div> */}
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 lg:mb-8">
                 <div className="space-y-2">
