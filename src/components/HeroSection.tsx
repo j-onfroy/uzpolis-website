@@ -101,7 +101,7 @@ const HeroSection = () => {
               {t("home.title2")}
             </p>
           </div>
-
+{/* dasdfa */}
           <div className="bg-card rounded-3xl shadow-hero p-4 sm:p-6 lg:p-8">
 
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground text-center mb-6">
