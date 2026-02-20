@@ -1,62 +1,58 @@
-name: Auto Build and Deploy
+name: UzPolis Frontend CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Prod
+      - prod # Frontendchilar kodi qaysi branchga push qilinishini tekshiring
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  # Imaj nomi: j-onfroy/uzpolis-web bo'ladi
+  IMAGE_NAME: ${{ github.repository_owner }}/uzpolis-web
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-      - name: Checkout code
+      - name: 1. GitHub'dan kodni o'qib olish
         uses: actions/checkout@v3
 
-      - name: Login to GitHub Container Registry
+      - name: 2. GitHub Container Registry (GHCR) ga ulanish
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: 3. Docker imaj yaratish va GHCR ga yuklash
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          # Har doim 'latest' tagi bilan build qiladi
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push # Build tugamaguncha serverga tegmaydi
-
-    steps:
-      - name: Deploy to Server via SSH
+      - name: 4. Serverda Docker konteynerini yangilash
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            # GHCR-dan yangi imagni tortish
-            echo ${{ secrets.GITHUB_TOKEN }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            sudo docker pull ghcr.io/${{ github.repository }}:latest
+            cd /home/ubuntu/uzpolis 
             
-            # Konteynerni yangilash
-            sudo docker stop front-container || true
-            sudo docker rm front-container || true
+            # Serverni GitHub Registry'ga login qilish (Private imaj uchun)
+            sudo docker login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GH_PAT }}
             
-            # Konteynerni ishga tushirish (8080:80 qismini Nginx-ga qarab to'g'irlab oling)
-            sudo docker run -d \
-              --name front-container \
-              --restart always \
-              -p 8080:80 \
-              ghcr.io/${{ github.repository }}:latest
+            # Yangi frontend imajini tortib olish
+            sudo docker-compose pull uzpolis-web
             
-            # Tozalash
-            sudo docker image prune -f
+            # Faqat frontendni (uzpolis-web) qayta ishga tushirish
+            sudo docker-compose up -d uzpolis-web
+            
+            # Server xotirasini tozalash
+            sudo docker image prune -a -f
