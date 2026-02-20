@@ -23,7 +23,6 @@ const Header = () => {
     localStorage.setItem("language", value);
     queryClient.invalidateQueries();
   }
-  console.log(user, "user")
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border">
@@ -42,7 +41,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                E-OSAGO
+                Category
               </a>
               {/* <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 KASKO
