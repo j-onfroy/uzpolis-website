@@ -53,6 +53,5 @@ jobs:
             
             # Faqat frontendni (uzpolis-web) qayta ishga tushirish
             sudo docker-compose up -d uzpolis-web
-            
-            # Server xotirasini tozalash
+          
             sudo docker image prune -a -f
