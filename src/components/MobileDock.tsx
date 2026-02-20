@@ -17,6 +17,7 @@ export default function MobileDock() {
         setActive(tab.id);
         nav(tab.link)
     }
+    
     const {t} = useTranslation()
     const tabs: Types[] = [
         { id: "home", label: t("home_tab"), icon: Home, link: "/" },
