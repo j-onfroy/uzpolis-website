@@ -51,8 +51,8 @@ const HeroSection = () => {
   const [driversCount, setDriversCount] = useState("");
   const [vehicleType, setVehicleType] = useState("");
   const { t } = useTranslation()
-  const { data, isLoading } = useCategory();
-  const { data: dataSub, isLoading: isSubLoading } = useSubCategory(activeTab);
+  // const { data, isLoading } = useCategory();
+  // const { data: dataSub, isLoading: isSubLoading } = useSubCategory(activeTab);
 
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -67,15 +67,15 @@ const HeroSection = () => {
       vehicleType,
     });
   };
-  console.log(data, "data")
+  // console.log(data, "data")
   useEffect(() => {
     setActiveSub(""); // reset when category changes
   }, [activeTab]);
-  useEffect(() => {
-    if (dataSub && dataSub.length > 0) {
-      setActiveSub(dataSub[0].id);
-    }
-  }, [dataSub]);
+  // useEffect(() => {
+  //   if (dataSub && dataSub.length > 0) {
+  //     setActiveSub(dataSub[0].id);
+  //   }
+  // }, [dataSub]);
   return (
     <section className="relative min-h-screen flex items-center pt-10 lg:pt-16 pb-10 lg:pb-16 overflow-hidden">
 

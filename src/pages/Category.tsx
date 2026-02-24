@@ -25,28 +25,30 @@ function Category() {
   const { data, isLoading } = useCategory();
   return (
     <div className="min-h-screen  mb-20 sm:items-center justify-center bg-gradient-to-br from-background via-muted/40 to-background px-3 sm:px-4 pt-16 sm:pt-0 pb-6">
-      <h2 className="w-full text-center text-lg font-semibold text-gray-800 mb-4">Category</h2>
+      <h2 className="w-full text-center text-lg font-semibold text-gray-800 mb-4">{t("category")}</h2>
       <div className="grid grid-cols-1 w-full sm:grid-cols-2 md:grid-cols-2 gap-4">
         {isLoading ?
           <div>
             <Loader className=" animate-spin " />
           </div>
-          : data.map((item: CategoryType, i: number) => (
+          : data.data.length > 0 ? data.data.map((item: CategoryType, i: number) => (
             <div
               key={i + 1}
-              onClick={()=> nav(item.slug)}
+              onClick={()=> nav("/category/sub/" + item.slug)}
               className="bg-white rounded-xl p-5 w-full shadow-sm border hover:shadow-md transition"
             >
               <div className="flex items-center justify-between">
                 <p className="text-gray-500 text-md">{item.name}</p>
                 <ChevronRight color="hsl(199 89% 48%)" className="" />
-
               </div>
               <p className="text-xl font-bold text-gray-900 mt-1">
                 {item.subName}
               </p>
             </div>
-          ))}
+          
+          )) 
+        : <div></div>
+        }
       </div>
     </div>
   )
