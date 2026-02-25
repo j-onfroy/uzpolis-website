@@ -1,10 +1,10 @@
 import { useSubUrlCategory } from "@/store/useCategory";
 import { Loader } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function SubCategory() {
   const location = useLocation();
-
+  const nav = useNavigate()
   const slug = location.pathname
     .replace(/^\/category\/sub/, "")
     .replace(/^\/+/, "");
@@ -35,7 +35,7 @@ export default function SubCategory() {
         <img
           src={data.bannerUrl}
           alt="banner"
-          className="w-full h-40 md:h-64 object-cover"
+          className="w-full h-40 md:h-24 object-cover"
         />
         <div className="absolute inset-0 bg-[#1b98e0] flex flex-col justify-end p-4 text-white">
           <h1 className="text-xl md:text-3xl font-bold">{data.name}</h1>
@@ -55,7 +55,8 @@ export default function SubCategory() {
         {data.subCategories.map((item: any, index: number) => (
           <div
             key={index}
-            className={`rounded-2xl p-4 shadow-sm border bg-white transition hover:shadow-md ${
+            onClick={()=>nav(`/service/${item.id}/${item.slug}`)}
+            className={` cursor-pointer rounded-2xl p-4 shadow-sm border bg-white transition hover:shadow-md ${
               item.disabled ? "opacity-50" : ""
             }`}
           >

@@ -11,6 +11,8 @@ import ProfilePage from "./pages/ProfilePage";
 import MainLayout from "./layout/MainLayout";
 import Category from "./pages/Category";
 import SubCategory from "./pages/SubCategory";
+import SubCategoryInfo from "./pages/SubCategoryInfo";
+import { ProductInfo } from "./pages/ProductInfo";
 
 const queryClient = new QueryClient();
 const App = () => {
@@ -28,9 +30,10 @@ const App = () => {
           <Route path="/user/login" element={<Login />} />
           <Route path="/category" element={<Category />} />
           <Route path="/category/sub/:url" element={<SubCategory/>} />
-          {/* <Route path="/auth" element={<AuthLayout />} > */}
+          <Route path="/service/:id/:subSlog" element={<SubCategoryInfo/>} />
           <Route path="/profile" element={<ProfilePage />} />
-          {/* </Route> */}
+          <Route path="/product/:productId" element={<ProductInfo/>} />
+
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

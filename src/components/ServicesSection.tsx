@@ -120,9 +120,8 @@ const ServicesSection = () => {
                 return (
                   <div
                     key={index}
-                    className={`group relative bg-card rounded-2xl p-6 lg:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1
-                
-                }`}
+                    onClick={()=>handleClick(service.slug)}
+                    className={`group cursor-pointer relative bg-card rounded-2xl p-6 lg:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Icon */}
@@ -139,8 +138,8 @@ const ServicesSection = () => {
 
                     {/* Price */}
                     <div className="flex  w-full items-center justify-between pt-4 border-t border-border">
-                      <span className="text-lg font-bold text-primary">{service.productCount}</span>
-                      <Button onClick={()=>handleClick(service.slug)} variant="ghost" size="sm" className="text-primary ">
+                      {/* <span className="text-lg font-bold text-primary">{service.productCount}</span> */}
+                      <Button onClick={()=>handleClick(service.slug)} variant="ghost" size="sm" className="text-primary  ">
                         {t("services.more")}
                         <ChevronRight className="w-4 h-4" />
                       </Button>

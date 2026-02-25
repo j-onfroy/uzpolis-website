@@ -12,4 +12,8 @@ export const getSubCategoryByUrl = async (url:string) => {
   const { data } = await api.get(`/api/v1/categories/slug/${url}`);
   return data;
 };
+export const getSubCategoryInfo = async (id:string) => {
+  const { data } = await api.get(`/api/v1/sub-categories/${id}`);
+  return data;
+};
 

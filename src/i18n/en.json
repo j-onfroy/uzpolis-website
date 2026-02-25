@@ -126,5 +126,6 @@
         "users": "Referred Users",
         "pur": "Referral Purchases"
     },
-    "category":"Category"
+    "category":"Category",
+    "transactions":"Transactions"
 }
