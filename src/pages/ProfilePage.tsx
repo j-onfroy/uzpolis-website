@@ -159,7 +159,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="w-full hidden lg:block">
                             <div className="bg-white/70 backdrop-blur-xl border h-screen border-gray-200  rounded-2xl shadow p-6 ">
-                            <h2 className="text-xl font-semibold text-gray-800">Transactions</h2>
+                            <h2 className="text-xl font-semibold text-gray-800">{t('transactions')}</h2>
                              <div className=" flex w-full justify-center">
                                 <img src={img} alt="" className=" m-auto w-60" />
                              </div>
