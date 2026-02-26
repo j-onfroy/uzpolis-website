@@ -85,7 +85,7 @@ export const ProductInfo = () => {
     const { data, isLoading, isError } = useProductInfo(productId)
     const { data: productList, isLoading: productListLoad } = useProductsList()
     console.log(data, "data")
-
+    window.scrollTo(0, 0)
     if (isLoading) {
         return (
             <div className="flex justify-center mt-20">
@@ -99,10 +99,10 @@ export const ProductInfo = () => {
     }
     const item = data.data;
     return (
-        <div className="max-w-7xl mt-20 mb-20 mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="max-w-7xl mt-20 mb-20 mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 bg-gray-100">
 
             {/* LEFT SIDE */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-6 bg-gray-100">
                 <Stepper currentStep={0} />
                 {isMobile &&
                     <div className="bg-white rounded-3xl  border border-gray-200 h-fit sticky  space-y-5">

@@ -23,6 +23,7 @@ function Category() {
   const { t } = useTranslation()
   const nav = useNavigate()
   const { data, isLoading } = useCategory();
+  window.scrollTo(0, 0)
   return (
     <div className="min-h-screen  mb-20 sm:items-center justify-center bg-gradient-to-br from-background via-muted/40 to-background px-3 sm:px-4 pt-16 sm:pt-0 pb-6">
       <h2 className="w-full text-center text-lg font-semibold text-gray-800 mb-4">{t("category")}</h2>

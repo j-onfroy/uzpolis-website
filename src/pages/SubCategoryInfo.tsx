@@ -37,15 +37,15 @@ function SubCategoryInfo() {
   if (isError || !dataSub.data) {
     return <div className="p-4">Data not found</div>;
   }
-
+  window.scrollTo(0, 0)
   const data = dataSub.data;
   const productsItem = dataProduct?.data;
 
   return (
-    <div className="max-w-5xl sm:mb-40 md:mb-2 mt-20 mx-auto bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
+    <div className="max-w-5xl sm:mb-40 md:mb-2 mt-20 mx-auto mb-40 sm:bg-gray-100 md:bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
 
       {/* Top */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex bg-white pt-2 px-2 rounded-md flex-col sm:flex-row sm:items-center gap-4">
 
         {/* Icon */}
         <div className="flex items-center gap-3">
