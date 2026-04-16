@@ -126,6 +126,9 @@
         "users": "Referred Users",
         "pur": "Referral Purchases"
     },
-    "category":"Category",
-    "transactions":"Transactions"
+    "category": "Category",
+    "transactions": "Transactions",
+    "not_found": "Category not found",
+    "data_not_found": "Data not found",
+     "insurance_not_found":"Insurance not found"
 }

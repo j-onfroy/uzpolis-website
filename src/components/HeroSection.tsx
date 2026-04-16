@@ -79,14 +79,14 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center pt-10 lg:pt-16 pb-10 lg:pb-16 overflow-hidden">
 
-      <div className="hidden lg:block absolute inset-0 home-hero opacity-95" />
-      <img src={img} alt="" className=" lg:block absolute inset-0 w-full h-full object-cover" />
+      {/* <div className="hidden lg:block absolute inset-0 home-hero opacity-95" /> */}
+      {/* <img src={img} alt="" className=" lg:block absolute inset-0 w-full h-full object-cover" /> */}
 
-      <div className="hidden lg:block absolute top-1/4 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
-      <div className="hidden lg:block absolute bottom-0 left-1/4 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl" />
+      {/* <div className="hidden lg:block absolute top-1/4 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl" /> */}
+      {/* <div className="hidden lg:block absolute bottom-0 left-1/4 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl" /> */}
 
-      <div className="hidden lg:block absolute top-1/2 right-1/3 w-6 h-6 bg-accent/40 rounded-full animate-float" style={{ animationDelay: "1s" }} />
-      <div className="hidden lg:block absolute bottom-1/3 left-1/3 w-3 h-3 bg-primary-foreground/20 rounded-full animate-float" style={{ animationDelay: "2s" }} />
+      {/* <div className="hidden lg:block absolute top-1/2 right-1/3 w-6 h-6 bg-accent/40 rounded-full animate-float" style={{ animationDelay: "1s" }} /> */}
+      {/* <div className="hidden lg:block absolute bottom-1/3 left-1/3 w-3 h-3 bg-primary-foreground/20 rounded-full animate-float" style={{ animationDelay: "2s" }} /> */}
 
       <div className="container mx-auto px-4 relative z-10">
 
@@ -260,7 +260,6 @@ const HeroSection = () => {
         </div>
       </div>
     </section>
-
   );
 };
 

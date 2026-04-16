@@ -35,7 +35,7 @@ function Category() {
           : data.data.length > 0 ? data.data.map((item: CategoryType, i: number) => (
             <div
               key={i + 1}
-              onClick={()=> nav("/category/sub/" + item.slug)}
+              onClick={() => nav("/category/sub/" + item.slug)}
               className="bg-white rounded-xl p-5 w-full shadow-sm border hover:shadow-md transition"
             >
               <div className="flex items-center justify-between">
@@ -46,9 +46,9 @@ function Category() {
                 {item.subName}
               </p>
             </div>
-          
-          )) 
-        : <div></div>
+
+          ))
+            : <div>{t("data_not_found")}</div>
         }
       </div>
     </div>
