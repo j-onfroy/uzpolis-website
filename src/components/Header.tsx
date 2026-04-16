@@ -1,10 +1,11 @@
-import { Shield, Menu, X, CircleUserRound } from "lucide-react";
+import { Menu, X, CircleUserRound } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import logo from "@/assets/icon.png";
 
 const Header = () => {
   const queryClient = useQueryClient();
@@ -31,10 +32,17 @@ const Header = () => {
             {/* Logo */}
             <div className="flex items-center gap-2" >
               <a href="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center ">
-                  <Shield className="w-5 h-5 text-primary-foreground" />
+                <div className="flex items-center gap-2">
+                  {/* <img src={logo} alt="" width={38} /> */}
+                  <div>
+
+                    <p className="text-2xl font-bold text-primary">
+                      Uzpolis
+                    </p>
+                    <p className="text-xs text-muted-foreground">sug'urta</p>
+                  </div>
+                  <br />
                 </div>
-                <span className="text-xl font-bold text-foreground">UzPolis</span>
               </a>
             </div>
 
@@ -83,7 +91,7 @@ const Header = () => {
                     <CircleUserRound size={30} color="#023e8a" />
                   </div>
                   :
-                  <Button  onClick={() => nav("/user/login")}>{t("home.login")}</Button>
+                  <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
               }
             </div>
 

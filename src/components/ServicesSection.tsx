@@ -90,7 +90,7 @@ const ServicesSection = () => {
     nav("/category/sub/" + slug)
   }
   return (
-    <section id="services" className="py-20 lg:py-32 bg-background">
+    <section id="services" className="py-20 mt-[-100px] lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

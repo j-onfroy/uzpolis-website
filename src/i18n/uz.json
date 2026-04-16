@@ -14,7 +14,9 @@
     },
     "home": {
         "login": "Shaxsiy kabinet",
-        "title1": "Sug‘urta — tez, oson va onlayn",
+        "title1": "Tez va onlayn  ",
+        "set1":"sug'urtaga",
+        "set2":"ega bo'ling",
         "title2": " Bir nechta sug‘urta kompaniyalaridan eng yaxshi takliflarni onlayn solishtiring va darhol rasmiylashtiring.",
         "calc": "Sug'urta kalkulyatori",
         "state_number": "Davlat raqami",
