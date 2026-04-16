@@ -35,7 +35,6 @@ const Header = () => {
                 <div className="flex items-center gap-2">
                   {/* <img src={logo} alt="" width={38} /> */}
                   <div>
-
                     <p className="text-2xl font-bold text-primary">
                       Uzpolis
                     </p>
