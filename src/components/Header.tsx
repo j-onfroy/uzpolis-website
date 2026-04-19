@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import logo from "@/assets/icon.png";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const queryClient = useQueryClient();
@@ -26,21 +26,21 @@ const Header = () => {
   }
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border">
-        <div className="container mx-auto px-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border ">
+        <div className="container mx-auto px-28">
           <div className="flex items-center justify-between h-13 lg: h-16">
             {/* Logo */}
             <div className="flex items-center gap-2" >
               <a href="/" className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
-                  {/* <img src={logo} alt="" width={38} /> */}
-                  <div>
+                 <img src={logo} alt="" width={"60px"} />
+                  {/* <div>
                     <p className="text-2xl font-bold text-primary">
                       Uzpolis
                     </p>
                     <p className="text-xs text-muted-foreground">sug'urta</p>
                   </div>
-                  <br />
+                  <br /> */}
                 </div>
               </a>
             </div>

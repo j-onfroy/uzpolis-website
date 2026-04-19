@@ -13,7 +13,7 @@ import {
 import { ChevronRight, Car, Plane, CheckCircle2 } from "lucide-react";
 import { useCategory, useSubCategory } from "@/store/useCategory";
 import { useTranslation } from "react-i18next";
-import heroImage from "@/assets/hero-illustration.png";
+import heroImage from "@/assets/hero-illustration2.png";
 import Navbar from "./Navbar";
 import InsuranceForm from "./InsuranceForm";
 import CompanyList from "./CompanyList";
@@ -81,12 +81,12 @@ const HeroSection = () => {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background mt-10">
       {/* <Navbar /> */}
       <Header />
 
       {/* Hero */}
-      <section className="container mx-auto  px-4 pt-12 pb-8 md:px-10">
+      <section className="container mx-auto  px-4 pt-12 pb-8 md:px-32">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold text-foreground leading-tight mb-6">
@@ -111,7 +111,7 @@ const HeroSection = () => {
       </section>
 
       {/* Main content */}
-      <section className="container mx-auto px-4 pb-16">
+      <section className="container mx-auto  pb-16 px-28">
         <div className="grid lg:grid-cols-[380px_1fr] gap-8">
           {/* Left: Tabs + Form */}
           <div>
