@@ -1,10 +1,11 @@
-import { Shield, Menu, X, CircleUserRound } from "lucide-react";
+import { Menu, X, CircleUserRound } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const queryClient = useQueryClient();
@@ -25,16 +26,22 @@ const Header = () => {
   }
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border">
-        <div className="container mx-auto px-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border ">
+        <div className="container mx-auto px-28">
           <div className="flex items-center justify-between h-13 lg: h-16">
             {/* Logo */}
             <div className="flex items-center gap-2" >
               <a href="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center ">
-                  <Shield className="w-5 h-5 text-primary-foreground" />
+                <div className="flex items-center gap-2">
+                 <img src={logo} alt="" width={"60px"} />
+                  {/* <div>
+                    <p className="text-2xl font-bold text-primary">
+                      Uzpolis
+                    </p>
+                    <p className="text-xs text-muted-foreground">sug'urta</p>
+                  </div>
+                  <br /> */}
                 </div>
-                <span className="text-xl font-bold text-foreground">UzPolis</span>
               </a>
             </div>
 
@@ -83,7 +90,7 @@ const Header = () => {
                     <CircleUserRound size={30} color="#023e8a" />
                   </div>
                   :
-                  <Button  onClick={() => nav("/user/login")}>{t("home.login")}</Button>
+                  <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
               }
             </div>
 

@@ -4,6 +4,7 @@ import { useProductUrl } from "@/store/useProduct";
 import { Loader } from "lucide-react";
 import { useParams } from "react-router-dom"
 import empty from "@/assets/empty.webp"
+import { useTranslation } from "react-i18next";
 type ApiResponse = {
   success: boolean;
   data: {
@@ -19,9 +20,8 @@ type ApiResponse = {
   };
 };
 function SubCategoryInfo() {
-  const { id, subSlog } = useParams()
-
-  console.log(subSlog, "id")
+  const { id, subSlog } = useParams();
+   const {t} = useTranslation();
   const { data: dataSub, isLoading, isError } = useSubCategoryInfo(id);
   const { data: dataProduct, isLoading: ProductLoad, isError: productError } = useProductUrl(subSlog);
 
@@ -35,7 +35,7 @@ function SubCategoryInfo() {
   }
 
   if (isError || !dataSub.data) {
-    return <div className="p-4">Data not found</div>;
+    return <div className="p-4">{t("data_not_found")}</div>;
   }
   window.scrollTo(0, 0)
   const data = dataSub.data;
@@ -94,7 +94,7 @@ function SubCategoryInfo() {
       {dataProduct?.data && !productsItem.length &&
       <div className=" w-full text-center">
         <img src={empty} alt="" className="w-48 m-auto" />
-        Sug'turtalar topilmadi!
+        {t('insurance_not_found')}
       </div>
       }
       <div className="

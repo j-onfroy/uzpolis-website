@@ -1,7 +1,7 @@
 import { useSubUrlCategory } from "@/store/useCategory";
 import { Loader } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import empty from "@/assets/empty.webp"
 export default function SubCategory() {
   const location = useLocation();
   const nav = useNavigate()
@@ -29,7 +29,7 @@ export default function SubCategory() {
   const data = dataSub.data;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 pt-20 md:pt-20">
+    <div className="min-h-screen sm:mb-40 md:mb-2 bg-gray-100 p-4 pt-20 md:pt-20">
       {/* Banner */}
       <div className="relative rounded-2xl overflow-hidden shadow-md">
         <img
@@ -49,10 +49,17 @@ export default function SubCategory() {
       <p className="mt-4 text-gray-700 text-sm md:text-base">
         {data.description}
       </p>
-
+{
+  data?.subCategories.length === 0 && (
+    <div className="flex flex-col items-center mt-20 ">
+      <img src={empty} alt="No data" className="w-48 h-48 object-contain mb-4" />
+      <p className="text-gray-500 text-lg">Hech qanday subkategoriya topilmadi</p>
+    </div>
+  )
+}
       {/* Subcategories */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        {data.subCategories.map((item: any, index: number) => (
+        { data.subCategories.map((item: any, index: number) => (
           <div
             key={index}
             onClick={()=>nav(`/service/${item.id}/${item.slug}`)}
@@ -79,7 +86,9 @@ export default function SubCategory() {
               )}
             </div>
           </div>
-        ))}
+        ))
+     
+      }
       </div>
     </div>
   );

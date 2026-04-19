@@ -5,6 +5,7 @@ import { Loader } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { User, CheckCircle2, CreditCard } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "react-i18next";
 
 const steps = [
     { title: "Ma'lumot", icon: User },
@@ -82,6 +83,7 @@ function Stepper({ currentStep = 0 }) {
 export const ProductInfo = () => {
     const { productId } = useParams()
     const isMobile = useIsMobile()
+    const {t} = useTranslation()
     const { data, isLoading, isError } = useProductInfo(productId)
     const { data: productList, isLoading: productListLoad } = useProductsList()
     console.log(data, "data")
@@ -95,7 +97,7 @@ export const ProductInfo = () => {
     }
 
     if (isError || !data.data) {
-        return <div className="p-4">Data not found</div>;
+        return <div className="p-4">{t("data_not_found")}</div>;
     }
     const item = data.data;
     return (
@@ -210,7 +212,7 @@ export const ProductInfo = () => {
                 }
                 {
                     productList?.data?.length === 0 ?
-                        <div>Hozircha yo'q</div>
+                        <div>{t("data_not_found")}</div>
                         :
                         productList?.data.map((elements) => (
                             <div key={elements.id} className=" relative bg-gradient-to-br border mt-[-10px]  bg-white rounded-3xl p-6  pb-8">
