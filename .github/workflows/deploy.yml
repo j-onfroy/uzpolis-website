@@ -11,6 +11,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   # Imaj nomi: j-onfroy/uzpolis-web bo'ladi
   IMAGE_NAME: ${{ github.repository_owner }}/uzpolis-web
 
