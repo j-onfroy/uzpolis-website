@@ -27,13 +27,13 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl bg-white border-b border-border ">
-        <div className="container mx-auto px-28">
+        <div className="container mx-auto md:px-28">
           <div className="flex items-center justify-between h-13 lg: h-16">
             {/* Logo */}
             <div className="flex items-center gap-2" >
               <a href="/" className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
-                 <img src={logo} alt="" width={"60px"} />
+                  <img src={logo} alt="" width={"60px"} />
                   {/* <div>
                     <p className="text-2xl font-bold text-primary">
                       Uzpolis
@@ -48,7 +48,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">
-                Category
+                
               </a>
               {/* <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 KASKO
@@ -107,7 +107,7 @@ const Header = () => {
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t border-border animate-fade-in">
               <nav className="flex flex-col gap-4">
-                <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium py-2">
+                {/* <a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium py-2">
                   Услуги
                 </a>
                 <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium py-2">
@@ -118,10 +118,19 @@ const Header = () => {
                 </a>
                 <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors font-medium py-2">
                   Контакты
-                </a>
-                <div className="pt-4 border-t border-border">
+                </a> */}
+                {/* <div className="pt-4 border-t border-border">
                   <Button className="w-full">Получить полис</Button>
-                </div>
+                </div> */}
+                {
+                  user?.phoneNumber ?
+                    <div onClick={() => nav("/profile")} className=" cursor-pointer flex gap-2 text-[#023e8a] items-center p-2 rounded-md border">
+                      <p> {user?.phoneNumber}</p>
+                      <CircleUserRound size={30} color="#023e8a" />
+                    </div>
+                    :
+                    <Button onClick={() => nav("/user/login")}>{t("home.login")}</Button>
+                }
               </nav>
             </div>
           )}

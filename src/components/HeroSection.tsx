@@ -1,55 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import img from "@/assets/01.webp";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ChevronRight, Car, Plane, CheckCircle2 } from "lucide-react";
-import { useCategory, useSubCategory } from "@/store/useCategory";
+import {  CheckCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import heroImage from "@/assets/hero-illustration2.png";
-import Navbar from "./Navbar";
 import InsuranceForm from "./InsuranceForm";
 import CompanyList from "./CompanyList";
 import Header from "./Header";
-const tabs = ["ОСАГО", "КАСКО", "Путешествие", "Имущество"];
-const features = ["Сравнимые цены", "Быстрое оформление", "Электронный полис"];
-
-// const tabs = [
-//   // { id: "all", label: "Все", icon: Layers, count: 6 },
-//   { id: "osago", label: "ОСАГО", icon: Car, count: 1 },
-//   { id: "kasko", label: "КАСКО", icon: Car, count: 3 },
-//   // { id: "dms", label: "ДМС", icon: Heart, count: 1 },
-//   { id: "travel", label: "Путешествия", icon: Plane, count: 1 },
-//   // { id: "property", label: "Имущество", icon: Home, count: 0 },
-// ];
-type TabType = {
-  bannerUrl: string
-  code: string
-  createdAt: string
-  description: string
-  disabled: boolean
-  iconUrl: string
-  id: string
-  isActive: boolean
-  name: string;
-  productCount: number
-  slug: string
-  sortOrder: number
-  subCategoryCount: number
-  subName: string
-  visible: string
-}
 
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("ОСАГО");
-  // const [activeTab, setActiveTab] = useState("796dc36b-5ea5-4c43-9333-149cbf9a0bc4");
   const [activeSub, setActiveSub] = useState("ed966f96-cc14-4a88-80b9-010db3f32d38");
 
   const [isSpecialVehicle, setIsSpecialVehicle] = useState(false);
@@ -58,7 +16,10 @@ const HeroSection = () => {
   const [passportNumber, setPassportNumber] = useState("");
   const [driversCount, setDriversCount] = useState("");
   const [vehicleType, setVehicleType] = useState("");
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  const tabs = [{label:t("form.osago_title"), value:"ОСАГО"}, {label:t("form.kasko_title"), value:"КАСКО"},{label:t("form.travel_title"), value:"Путешествие"}, {label:t("form.property_title"), value:"Имущество"}];
+
+  const features = [t("home.info1"), t("home.info2"), t("home.info3")];
   // const { data, isLoading } = useCategory();
   // const { data: dataSub, isLoading: isSubLoading } = useSubCategory(activeTab);
 
@@ -111,21 +72,21 @@ const HeroSection = () => {
       </section>
 
       {/* Main content */}
-      <section className="container mx-auto  pb-16 px-28">
+      <section className="container mx-auto  pb-16 md:px-28">
         <div className="grid lg:grid-cols-[380px_1fr] gap-8">
           {/* Left: Tabs + Form */}
           <div>
             <div className="flex rounded-t-xl overflow-hidden border border-b-0 border-border">
               {tabs.map((tab) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === tab
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === tab.value
                     ? "bg-primary text-primary-foreground"
                     : "bg-secondary text-foreground/60 hover:bg-accent"
                     }`}
                 >
-                  {tab}
+                  {tab.label}
                 </button>
               ))}
             </div>
