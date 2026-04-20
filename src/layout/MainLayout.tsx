@@ -9,10 +9,9 @@ function MainLayout() {
     const isMobile = useIsMobile()
     return (
         <>
-            {
-                !isMobile ?
                 <Header />
-                : <DropLang/>
+            {isMobile &&
+                <br />
             }
             <Outlet />
             {

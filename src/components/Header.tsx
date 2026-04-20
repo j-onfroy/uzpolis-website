@@ -53,12 +53,12 @@ const Header = () => {
               {/* <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 KASKO
               </a> */}
-              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              {/* <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 B2B
-              </a>
-              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              </a> */}
+              {/* <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                 {t("collab")}
-              </a>
+              </a> */}
               {/* <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors font-medium">
               Контакты
             </a> */}

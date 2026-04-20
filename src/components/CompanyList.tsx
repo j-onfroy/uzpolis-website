@@ -1,13 +1,7 @@
 import { useTranslation } from "react-i18next";
-
+import logo from "@/assets/8.png";
 const companies = [
-  { name: "GROSS Insurance", discount: 17, color: "hsl(174 42% 41%)" },
-  { name: "Kapital Sug'urta", discount: 15, color: "hsl(200 50% 45%)" },
-  { name: "Kafolat", discount: 13, color: "hsl(160 60% 40%)" },
-  { name: "Temiryo'l Sug'urta", discount: 10, color: "hsl(340 50% 50%)" },
-  { name: "INSON", discount: 9, color: "hsl(220 60% 50%)" },
-  { name: "NEO Insurance", discount: 9, color: "hsl(170 70% 40%)" },
-  { name: "APEX Insurance", discount: 8, color: "hsl(210 30% 35%)" },
+  { name: "SQB Insurance", discount: 100, color: "hsl(174 42% 41%)" },
 ];
 
 const CompanyList = () => {
@@ -25,7 +19,7 @@ const CompanyList = () => {
             className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold"
             style={{ backgroundColor: c.color + "20", color: c.color }}
           >
-            {c.name[0]}
+            <img src={logo} alt="" />
           </div>
           <span className="font-medium text-foreground">{c.name}</span>
         </div>
