@@ -50,7 +50,7 @@ const HowItWorksSection = () => {
         </div>
 
         {/* Steps */}
-        <div className="relative">
+        <div className="relative md:px-28">
           {/* Connection line */}
           <div className="hidden lg:block absolute top-24 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
@@ -70,8 +70,8 @@ const HowItWorksSection = () => {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-foreground mb-3">{values[index].title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{values[index].description}</p>
+                  <h3 className="text-md font-bold text-foreground mb-3">{values[index].title}</h3>
+                  <p className="text-muted-foreground text-[12px] leading-relaxed">{values[index].description}</p>
                 </div>
 
                 {/* Arrow connector for desktop */}

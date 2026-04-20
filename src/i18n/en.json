@@ -21,7 +21,44 @@
         "serya": "Technical Passport Series and Number",
         "drives": "Number of Drivers",
         "not_limit": "Unlimited",
-        "submit": "Calculate"
+        "submit": "Calculate",
+        "info1": "Comparable prices",
+        "info2": "Fast processing",
+        "info3": "Electronic policy",
+        "company":"Companies"
+    },
+    "form": {
+        "osago_title": "OSAGO",
+        "osago_license_plate_label": "License plate",
+        "osago_license_plate_placeholder": "01A001AA",
+        "osago_tech_passport_series_label": "Tech passport series",
+        "osago_tech_passport_series_placeholder": "AAA",
+        "osago_tech_passport_number_label": "Tech passport number",
+        "osago_tech_passport_number_placeholder": "0000000",
+        "osago_drivers_label": "Number of drivers",
+        "osago_drivers_unlimited": "Unlimited",
+        "osago_drivers_limited": "Limited to 5 people",
+        "kasko_title": "CASCO",
+        "kasko_brand_label": "Car brand",
+        "kasko_brand_placeholder": "Chevrolet",
+        "kasko_model_label": "Model",
+        "kasko_model_placeholder": "Nexia",
+        "kasko_year_label": "Year of manufacture",
+        "kasko_year_placeholder": "2020",
+        "travel_title": "Travel",
+        "travel_country_label": "Destination country",
+        "travel_country_placeholder": "Turkey",
+        "travel_departure_label": "Departure date",
+        "travel_departure_placeholder": "01.01.2026",
+        "travel_return_label": "Return date",
+        "travel_return_placeholder": "15.01.2026",
+        "property_title": "Property",
+        "property_type_label": "Property type",
+        "property_type_placeholder": "Apartment",
+        "property_address_label": "Address",
+        "property_address_placeholder": "Tashkent, st. ...",
+        "property_area_label": "Area (m²)",
+        "property_area_placeholder": "65"
     },
     "services": {
         "title1": "Our Services",
@@ -125,5 +162,10 @@
         "copied": "Copied!",
         "users": "Referred Users",
         "pur": "Referral Purchases"
-    }
+    },
+    "category": "Category",
+    "transactions": "Transactions",
+    "not_found": "Category not found",
+    "data_not_found": "Data not found",
+    "insurance_not_found": "Insurance not found"
 }

@@ -58,14 +58,14 @@ const BenefitsSection = () => {
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:px-28">
           {benefits.map((benefit, index) => (
             <div
               key={index}
               className="group flex gap-4 p-6 bg-card rounded-2xl border border-border hover:border-primary/20 transition-all duration-300"
             >
               {/* Icon */}
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl gradient-hero flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl gradient-hero flex items-center justify-center transition-transform duration-300">
                 <benefit.icon className="w-6 h-6 text-primary-foreground" />
               </div>
 

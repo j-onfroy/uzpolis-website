@@ -1,5 +1,5 @@
 # 1-bosqich: Build (Node.js orqali kodni yig'ish)
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
 # Kutubxonalarni o'rnatish
