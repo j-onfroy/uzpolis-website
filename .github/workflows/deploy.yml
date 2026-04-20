@@ -37,6 +37,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          no-cache: true # <--- Keshni majburan o'chirish
 
       - name: 4. Serverda Docker konteynerini yangilash
         uses: appleboy/ssh-action@master
