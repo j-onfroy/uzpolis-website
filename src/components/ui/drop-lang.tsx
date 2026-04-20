@@ -21,12 +21,12 @@ function DropLang() {
     return (
         <header className="flex items-center justify-between  absolute top-1 z-50 w-full px-3">
             <div className="flex items-center gap-2 bg-white p-1 rounded-md" >
-                <a href="/" className="flex items-center gap-2">
+                {/* <a href="/" className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center ">
                         <Shield className="w-5 h-5 text-primary-foreground" />
                     </div>
                     <span className="text-xl font-bold text-foreground ">UzPolis</span>
-                </a>
+                </a> */}
             </div>
             <div>
                 <DropdownMenu>
