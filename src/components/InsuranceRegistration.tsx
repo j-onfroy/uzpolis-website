@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Shield,
@@ -149,7 +149,9 @@ const InsuranceRegistration: React.FC = () => {
     { num: 3, label: "To'lov", sub: 'Payme / Click', active: false },
     { num: 4, label: 'Polis tayyor', sub: 'Yuklab olish', active: false },
   ];
-  window.scrollTo(0, 0);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
   return (
     <div className="min-h-screen bg-[#f5f7fb] pb-20">
       {/* Page header */}
@@ -179,9 +181,8 @@ const InsuranceRegistration: React.FC = () => {
             {steps.map((step, idx) => (
               <React.Fragment key={idx}>
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                    step.active ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${step.active ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
+                    }`}>
                     {step.num}
                   </div>
                   <div className="min-w-0 hidden sm:block">
@@ -262,11 +263,10 @@ const InsuranceRegistration: React.FC = () => {
                         <button
                           key={id}
                           onClick={() => setPeriodId(id)}
-                          className={`flex-1 py-2.5 text-xs font-semibold rounded-xl border transition-all ${
-                            periodId === id
+                          className={`flex-1 py-2.5 text-xs font-semibold rounded-xl border transition-all ${periodId === id
                               ? 'border-blue-500 bg-blue-50 text-blue-700'
                               : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
-                          }`}
+                            }`}
                         >
                           {PERIOD_LABELS[id]}
                         </button>
@@ -568,7 +568,7 @@ const InsuranceRegistration: React.FC = () => {
               </div>
 
               <div className="px-5 pt-3 pb-4">
-                <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                <div className="flex items-center justify-between  border-gray-100 pt-3">
                   <span className="text-sm font-semibold text-gray-800">Jami to'lov</span>
                   <div className="text-right">
                     {calcResult ? (
@@ -583,15 +583,6 @@ const InsuranceRegistration: React.FC = () => {
                     )}
                   </div>
                 </div>
-              </div>
-
-              <div className="px-5 pb-4 border-t border-gray-100 pt-3 space-y-2">
-                {["Markaziy bank litsenziyasi", "256-bit SSL shifrlash", "24/7 mijozlar yordami"].map((text) => (
-                  <div key={text} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
-                    <span className="text-[11px] text-gray-500">{text}</span>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
