@@ -86,14 +86,14 @@ const ServicesSection = () => {
   // const { data: dataSub, isLoading: isSubLoading } = useSubCategory(activeTab);
   const { t } = useTranslation()
   const nav = useNavigate()
-  const handleClick = (slug:string) =>{
+  const handleClick = (slug: string) => {
     nav("/category/sub/" + slug)
   }
   return (
-    <section id="services" className="py-20 mt-[-100px] lg:py-32 bg-background">
+    <section id="services" className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4">
             {t("services.title1")}
           </span>{" "}
@@ -107,20 +107,40 @@ const ServicesSection = () => {
           <p className="text-lg text-muted-foreground">
             {t("services.title3")}
           </p>
-        </div>
+        </div> */}
 
+        <div className="max-w-[1216px] mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-ink tracking-tight"> {t("services.title1")}</h2>
+            {/* <p className="text-mute mt-3 max-w-lg mx-auto">
+              {t("services.step_description")}
+            </p> */}
+           
+          <p className="text-lg text-muted-foreground">
+            {t("services.title3")}
+          </p>
+          </div>
+        </div>
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 md:px-28">
           {
             !data?.data ?
-              <p>No data</p>
+              <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-muted-foreground/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-medium text-slate-700">Ma'lumot topilmadi</p>
+                <p className="text-xs text-muted-foreground mt-1">Hozircha xizmatlar mavjud emas</p>
+              </div>
               :
               data?.data.map((service: TabType, index: number) => {
                 const Icon = services[index]?.icon;
                 return (
                   <div
                     key={index}
-                    onClick={()=>handleClick(service.slug)}
+                    onClick={() => handleClick(service.slug)}
                     className={`group cursor-pointer relative bg-card rounded-2xl p-6 lg:p-8 border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
@@ -139,7 +159,7 @@ const ServicesSection = () => {
                     {/* Price */}
                     <div className="flex  w-full items-center justify-between pt-4 border-t border-border">
                       {/* <span className="text-lg font-bold text-primary">{service.productCount}</span> */}
-                      <Button onClick={()=>handleClick(service.slug)} variant="ghost" size="sm" className="text-primary  ">
+                      <Button onClick={() => handleClick(service.slug)} variant="ghost" size="sm" className="text-primary  ">
                         {t("services.more")}
                         <ChevronRight className="w-4 h-4" />
                       </Button>

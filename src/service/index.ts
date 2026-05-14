@@ -68,7 +68,9 @@ api.interceptors.request.use(
     }
 
     if (lang) {
-      config.headers["Accept-Language"] = lang;
+      // config.headers["Accept-Language"] = lang;
+      config.headers["Accept-Language"] = 'uz';
+
     }
 
     return config;

@@ -13,6 +13,9 @@ import Category from "./pages/Category";
 import SubCategory from "./pages/SubCategory";
 import SubCategoryInfo from "./pages/SubCategoryInfo";
 import { ProductInfo } from "./pages/ProductInfo";
+import InsuranceRegistration from "./components/InsuranceRegistration";
+import OsagoResult from "./pages/OsagoResult";
+import PaymentPage from "./pages/PaymentPage";
 
 const queryClient = new QueryClient();
 const App = () => {
@@ -29,10 +32,14 @@ const App = () => {
           <Route path="/" index element={<Index />} />
           <Route path="/user/login" element={<Login />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/register" element={<InsuranceRegistration />} />
+
           <Route path="/category/sub/:url" element={<SubCategory/>} />
           <Route path="/service/:id/:subSlog" element={<SubCategoryInfo/>} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/product/:productId" element={<ProductInfo/>} />
+          <Route path="/osago/result" element={<OsagoResult />} />
+          <Route path="/osago/payment" element={<PaymentPage />} />
 
         </Route>
         <Route path="*" element={<NotFound />} />

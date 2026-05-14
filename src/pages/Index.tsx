@@ -1,18 +1,23 @@
 import HeroSection from "@/components/HeroSection";
+import FormSection from "@/components/FormSection";
 import ServicesSection from "@/components/ServicesSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import CTASection from "@/components/CTASection";
+// import BenefitsSection from "@/components/BenefitsSection";
 import Footer from "@/components/Footer";
+import FAQ from "@/components/FAQ";
+import HowItWorks from "@/components/HowItWorks";
+import WhyUs from "@/components/WhyUs";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <FormSection />
       <ServicesSection />
-      <BenefitsSection />
-      <HowItWorksSection />
-      <CTASection />
+      {/* <BenefitsSection /> */}
+      <HowItWorks />
+      <WhyUs />
+      <FAQ />
+      {/* <CTASection /> */}
       <Footer />
     </div>
   );

@@ -9,10 +9,17 @@ type SubCategoryResponse = {
     description: string;
     bannerUrl: string;
     subCategories: {
+      id: string;
+      slug: string;
       name: string;
       description: string;
       productCount: number;
       disabled: boolean;
+      iconUrl?: string;
+      amount?: number;
+      minAmount?: number;
+      badge?: string;
+      features?: string[];
     }[];
   };
 };
