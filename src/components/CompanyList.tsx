@@ -37,7 +37,7 @@ const COMPANIES: Company[] = [
     reviews: 2341,
     features: ["100 000 000 so'mgacha qoplama", "Uchinchi shaxs zarari", "Hayot va sog'liq"],
     price: 227000,
-    discount: 17,
+    discount: 100,
   },
   // {
   //   id: 2,
@@ -234,6 +234,7 @@ const CompanyList = () => {
             return (
               <div
                 key={c.id}
+                onClick={() => navigator("/register")}
                 className={`bg-white rounded-2xl border transition-all hover:border-primary hover:shadow-[0_0_0_1px_#1f4fd9] ${isFirst
                     ? "border-primary shadow-[0_0_0_1px_#1f4fd9]"
                     : "border-border hover:border-primary/40 hover:shadow-sm"
@@ -254,12 +255,12 @@ const CompanyList = () => {
                       <span className="font-semibold text-sm text-foreground">{c.name}</span>
                       
                     </div>
-                    <div className="flex items-center gap-1 mt-0.5">
+                    {/* <div className="flex items-center gap-1 mt-0.5">
                       <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
                       <span className="text-xs text-muted-foreground">
                         {c.rating} · {c.reviews.toLocaleString("ru-RU")} sharh
                       </span>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Features */}
@@ -274,12 +275,12 @@ const CompanyList = () => {
 
                   {/* Price + discount + button */}
                   <div className="flex items-center gap-3 ml-auto flex-shrink-0">
-                    <div className="text-right">
+                    {/* <div className="text-right">
                       <p className="text-2xl font-extrabold text-foreground leading-none">
                         {formatPrice(c.price)}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5">so'm</p>
-                    </div>
+                    </div> */}
 
                     <DiscountRing value={c.discount} />
 
