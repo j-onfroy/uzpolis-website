@@ -243,7 +243,7 @@ const OsagoResult = () => {
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
                       <input
                         className={inp}
-                        placeholder="AD"
+                        placeholder="AB"
                         maxLength={2}
                         value={form.ownerSeriya}
                         onChange={(e) =>
@@ -255,7 +255,7 @@ const OsagoResult = () => {
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
                       <input
                         className={inp}
-                        placeholder="5034200"
+                        placeholder="0000000"
                         maxLength={7}
                         inputMode="numeric"
                         value={form.ownerNumber}
@@ -273,7 +273,7 @@ const OsagoResult = () => {
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
                       <input
                         className={inp}
-                        placeholder="AD"
+                        placeholder="AB"
                         maxLength={2}
                         value={form.passSeriya}
                         onChange={(e) =>
@@ -285,7 +285,7 @@ const OsagoResult = () => {
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
                       <input
                         className={inp}
-                        placeholder="5034200"
+                        placeholder="0000000"
                         maxLength={7}
                         inputMode="numeric"
                         value={form.passNumber}

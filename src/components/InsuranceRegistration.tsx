@@ -246,7 +246,7 @@ const InsuranceRegistration: React.FC = () => {
                       <label className={lbl}>Texpassport raqami *</label>
                       <input
                         className={inp}
-                        placeholder="4471823"
+                        placeholder="0000000"
                         inputMode="numeric"
                         value={techNumber}
                         maxLength={7}
@@ -457,7 +457,7 @@ const InsuranceRegistration: React.FC = () => {
                         <label className={lbl}>Seriya</label>
                         <input
                           className={inp}
-                          placeholder="AD"
+                          placeholder="AB"
                           maxLength={2}
                           value={ownerSeriya}
                           onChange={(e) =>
@@ -484,7 +484,7 @@ const InsuranceRegistration: React.FC = () => {
                         <label className={lbl}>Seriya</label>
                         <input
                           className={inp}
-                          placeholder="AD"
+                          placeholder="AB"
                           maxLength={2}
                           value={passSeriya}
                           onChange={(e) =>
