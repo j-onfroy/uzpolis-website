@@ -1,7 +1,7 @@
 import { Home, Grid2X2, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 type Types = {
     id: string;
@@ -11,24 +11,32 @@ type Types = {
 }
 
 export default function MobileDock() {
+    const { pathname } = useLocation();
     const [active, setActive] = useState("");
-    const nav = useNavigate()
+    const nav = useNavigate();
+    const { t } = useTranslation();
+
+    useEffect(() => {
+        if (location.pathname === '/user/login') {
+            setActive("profile");
+        }
+    }, []);
+
     const handleClick = (tab: Types) => {
         setActive(tab.id);
-        nav(tab.link)
+        nav(tab.link);
+    };
+
+    if (pathname === '/register' || pathname.includes('/osago')) {
+        return null;
     }
-    
-    const {t} = useTranslation()
+
     const tabs: Types[] = [
         { id: "home", label: t("home_tab"), icon: Home, link: "/" },
-        { id: "category", label:  t("category_tab"), icon: Grid2X2, link: "/category" },
-        { id: "profile", label:  t("profile_tab"), icon: User, link: "/profile" },
+        // { id: "category", label:  t("category_tab"), icon: Grid2X2, link: "/category" },
+        { id: "register", label: t("register_tab"), icon: User, link: "/register" },
+        { id: "profile", label: t("profile_tab"), icon: User, link: "/profile" },
     ];
-    useEffect(()=>{
-        if(location.pathname === '/user/login'){
-            setActive("profile")
-        }
-    },[])
     return (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-md">
             {/* Glass container */}
@@ -37,7 +45,17 @@ export default function MobileDock() {
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = active === tab.id;
-
+                    if (tab.id === "register") {
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => handleClick(tab)}
+                                className={" bg-[#1f4fd9] text-white w-12 h-12  rounded-xl flex items-center justify-center shadow-lg transition-all duration-200"}
+                            >
+                                <span className="text-lg m-auto">+</span>
+                            </button>
+                        );
+                    }
                     return (
                         <button
                             key={tab.id}

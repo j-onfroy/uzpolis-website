@@ -7,10 +7,10 @@ function MainLayout() {
     const isMobile = useIsMobile()
     return (
         <>
-                <Header />
-            {isMobile &&
-                <br />
-            }
+            <Header />
+            {/* {isMobile &&
+                // <br />
+            } */}
             <Outlet />
             {
                 isMobile &&

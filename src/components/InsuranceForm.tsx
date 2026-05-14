@@ -154,7 +154,7 @@ const InsuranceForm = ({ activeTab }: Props) => {
           </RadioGroup>
         </div>
       )}
-      <Button className="w-full text-base font-semibold h-12">{t("home.submit")}</Button>
+      <Button className="w-full text-base font-semibold h-12 bg-teal-500 hover:bg-teal-600 border-0">{t("home.submit")}</Button>
     </div>
   );
 };
