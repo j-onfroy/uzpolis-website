@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { osagoCalculate, osagoCreateContract, type OsagoCalculateResponse } from '@/service/apis/osago.api';
 
-const PERIOD_LABELS: Record<number, string> = { 1: '3 oy', 2: '6 oy', 3: '9 oy', 4: '12 oy' };
+const PERIOD_LABELS: Record<number, string> = { 1: '3 oy', 2: '12 oy' };
 
 const inp =
   'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400';
@@ -51,7 +51,7 @@ const InsuranceRegistration: React.FC = () => {
   const [gosNumber, setGosNumber] = useState('');
   const [techSery, setTechSery] = useState('');
   const [techNumber, setTechNumber] = useState('');
-  const [periodId, setPeriodId] = useState(4);
+  const [periodId, setPeriodId] = useState(1);
   const [limited, setLimited] = useState(false);
   const [drivers, setDrivers] = useState<number[]>([]);
   const [driverInput, setDriverInput] = useState('');
@@ -92,14 +92,14 @@ const InsuranceRegistration: React.FC = () => {
     techSery.length >= 2 &&
     techNumber.length === 7;
 
+  const isLimited = calcResult?.limited ?? false;
+
   const canSubmitContract =
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
     ownerSeriya.length === 2 &&
     ownerNumber.length === 7 &&
-    passSeriya.length === 2 &&
-    passNumber.length === 7 &&
-    !!birthDate;
+    (!isLimited || (passSeriya.length === 2 && passNumber.length === 7 && !!birthDate));
 
   const handleCalculate = async () => {
     setCalcLoading(true);
@@ -133,7 +133,7 @@ const InsuranceRegistration: React.FC = () => {
         startDate,
         phoneNumber: phoneNumber.replace(/\s/g, ''),
         owner: { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: [{ passSeriya, passNumber, birthDate }],
+        drivers: isLimited ? [{ passSeriya, passNumber, birthDate }] : [],
       });
       navigate('/osago/payment', { state: { contract } });
     } catch (err: any) {
@@ -259,7 +259,7 @@ const InsuranceRegistration: React.FC = () => {
                   <div>
                     <label className={lbl}>Muddat *</label>
                     <div className="flex gap-2">
-                      {([1, 2, 3, 4] as const).map((id) => (
+                      {([1, 2] as const).map((id) => (
                         <button
                           key={id}
                           onClick={() => setPeriodId(id)}
@@ -478,41 +478,45 @@ const InsuranceRegistration: React.FC = () => {
                       </div>
                     </div>
 
-                    <p className="text-xs font-semibold text-gray-500">Haydovchi ma'lumotlari</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className={lbl}>Seriya</label>
-                        <input
-                          className={inp}
-                          placeholder="AB"
-                          maxLength={2}
-                          value={passSeriya}
-                          onChange={(e) =>
-                            setPassSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={lbl}>Raqam</label>
-                        <input
-                          className={inp}
-                          placeholder="0000000"
-                          maxLength={7}
-                          inputMode="numeric"
-                          value={passNumber}
-                          onChange={(e) => setPassNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className={lbl}>Tug'ilgan sana *</label>
-                      <input
-                        type="date"
-                        className={inp}
-                        value={birthDate}
-                        onChange={(e) => setBirthDate(e.target.value)}
-                      />
-                    </div>
+                    {isLimited && (
+                      <>
+                        <p className="text-xs font-semibold text-gray-500">Haydovchi ma'lumotlari</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className={lbl}>Seriya</label>
+                            <input
+                              className={inp}
+                              placeholder="AB"
+                              maxLength={2}
+                              value={passSeriya}
+                              onChange={(e) =>
+                                setPassSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
+                              }
+                            />
+                          </div>
+                          <div>
+                            <label className={lbl}>Raqam</label>
+                            <input
+                              className={inp}
+                              placeholder="0000000"
+                              maxLength={7}
+                              inputMode="numeric"
+                              value={passNumber}
+                              onChange={(e) => setPassNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className={lbl}>Tug'ilgan sana *</label>
+                          <input
+                            type="date"
+                            className={inp}
+                            value={birthDate}
+                            onChange={(e) => setBirthDate(e.target.value)}
+                          />
+                        </div>
+                      </>
+                    )}
 
                     {contractError && (
                       <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">

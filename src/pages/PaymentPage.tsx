@@ -15,12 +15,7 @@ import { osagoConfirmPayment } from "@/service/apis/osago.api";
 import { AlertCircle, Loader2, X } from "lucide-react";
 import sqbLogo from "@/assets/sqb.png";
 
-const PERIOD_LABELS: Record<number, string> = {
-  1: "3 oy",
-  2: "6 oy",
-  3: "9 oy",
-  4: "12 oy"
-};
+const PERIOD_LABELS: Record<number, string> = { 1: "3 oy", 2: "12 oy" };
 
 const PaymentPage = () => {
   const { state } = useLocation() as { state: { contract: OsagoContractResponse } | null };
@@ -89,7 +84,7 @@ const PaymentPage = () => {
 
   const calculateEndDate = (startDate: string, periodId: number) => {
     const [y, m, d] = startDate.split("-").map(Number);
-    const end = new Date(y, m - 1 + ({ 1: 3, 2: 6, 3: 9, 4: 12 }[periodId] ?? 12), d);
+    const end = new Date(y, m - 1 + ({ 1: 3, 2: 12 }[periodId] ?? 12), d);
     const ey = end.getFullYear();
     const em = String(end.getMonth() + 1).padStart(2, "0");
     const ed = String(end.getDate()).padStart(2, "0");

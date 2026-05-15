@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { osagoCreateContract, type OsagoCalculateResponse, type OsagoContractResponse } from "@/service/apis/osago.api";
 
-const PERIOD_LABELS: Record<number, string> = { 1: "3 oy", 2: "6 oy", 3: "9 oy", 4: "12 oy" };
+const PERIOD_LABELS: Record<number, string> = { 1: "3 oy", 2: "12 oy" };
 
 const inp =
   "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400";
@@ -78,20 +78,16 @@ const OsagoResult = () => {
       const contract: OsagoContractResponse = await osagoCreateContract({
         calculationId: result.id,
         startDate: form.startDate,
-        phoneNumber: form.phoneNumber,
+        phoneNumber: form.phoneNumber.replace(/\D/g, ''),
         owner: {
           person: {
             passSeriya: form.ownerSeriya,
             passNumber: form.ownerNumber,
           },
         },
-        drivers: [
-          {
-            passSeriya: form.passSeriya,
-            passNumber: form.passNumber,
-            birthDate: form.birthDate,
-          },
-        ],
+        drivers: result.limited
+          ? [{ passSeriya: form.passSeriya, passNumber: form.passNumber, birthDate: form.birthDate }]
+          : [],
       });
       navigate("/osago/payment", { state: { contract } });
     } catch (err: any) {
@@ -102,13 +98,11 @@ const OsagoResult = () => {
   };
 
   const canSubmit =
-    form.phoneNumber &&
+    form.phoneNumber.replace(/\D/g, '').length === 12 &&
     form.startDate &&
     form.ownerSeriya.length >= 2 &&
     form.ownerNumber.length >= 7 &&
-    form.passSeriya.length >= 2 &&
-    form.passNumber.length >= 7 &&
-    form.birthDate;
+    (!result.limited || (form.passSeriya.length >= 2 && form.passNumber.length >= 7 && form.birthDate));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -186,7 +180,7 @@ const OsagoResult = () => {
       {/* ── Contract modal ── */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden max-h-[95vh] flex flex-col">
             {/* Modal header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 flex-shrink-0">
               <div>
@@ -220,9 +214,18 @@ const OsagoResult = () => {
                     <label className="block text-xs font-medium text-gray-500 mb-1.5">Telefon raqami</label>
                     <input
                       className={inp}
-                      placeholder="+998901234567"
+                      placeholder="+998 90 000 00 00"
+                      inputMode="numeric"
                       value={form.phoneNumber}
-                      onChange={(e) => setField("phoneNumber", e.target.value)}
+                      onChange={(e) => {
+                        const d = e.target.value.replace(/\D/g, '').slice(0, 12);
+                        let out = d.length ? '+' + d.slice(0, 3) : '';
+                        if (d.length > 3) out += ' ' + d.slice(3, 5);
+                        if (d.length > 5) out += ' ' + d.slice(5, 8);
+                        if (d.length > 8) out += ' ' + d.slice(8, 10);
+                        if (d.length > 10) out += ' ' + d.slice(10, 12);
+                        setField("phoneNumber", out);
+                      }}
                     />
                   </div>
                   <div>
@@ -266,44 +269,48 @@ const OsagoResult = () => {
                     </div>
                   </div>
 
-                  {/* Driver passport */}
-                  <p className="text-xs font-semibold text-gray-500 pt-1">Haydovchi ma'lumotlari</p>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
-                      <input
-                        className={inp}
-                        placeholder="AB"
-                        maxLength={2}
-                        value={form.passSeriya}
-                        onChange={(e) =>
-                          setField("passSeriya", e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 2))
-                        }
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
-                      <input
-                        className={inp}
-                        placeholder="0000000"
-                        maxLength={7}
-                        inputMode="numeric"
-                        value={form.passNumber}
-                        onChange={(e) =>
-                          setField("passNumber", e.target.value.replace(/\D/g, "").slice(0, 7))
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1.5">Tug'ilgan sana</label>
-                    <input
-                      type="date"
-                      className={inp}
-                      value={form.birthDate}
-                      onChange={(e) => setField("birthDate", e.target.value)}
-                    />
-                  </div>
+                  {/* Driver passport — only when limited */}
+                  {result.limited && (
+                    <>
+                      <p className="text-xs font-semibold text-gray-500 pt-1">Haydovchi ma'lumotlari</p>
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
+                          <input
+                            className={inp}
+                            placeholder="AB"
+                            maxLength={2}
+                            value={form.passSeriya}
+                            onChange={(e) =>
+                              setField("passSeriya", e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 2))
+                            }
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
+                          <input
+                            className={inp}
+                            placeholder="0000000"
+                            maxLength={7}
+                            inputMode="numeric"
+                            value={form.passNumber}
+                            onChange={(e) =>
+                              setField("passNumber", e.target.value.replace(/\D/g, "").slice(0, 7))
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Tug'ilgan sana</label>
+                        <input
+                          type="date"
+                          className={inp}
+                          value={form.birthDate}
+                          onChange={(e) => setField("birthDate", e.target.value)}
+                        />
+                      </div>
+                    </>
+                  )}
 
                   {modalError && (
                     <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">

@@ -132,9 +132,7 @@ const FIELDS: Record<string, FieldDef[]> = {
       placeholder: "Tanlang",
       options: [
         { value: "1", label: "3 oy" },
-        { value: "2", label: "6 oy" },
-        { value: "3", label: "9 oy" },
-        { value: "4", label: "12 oy" },
+        { value: "2", label: "12 oy" },
       ],
     },
   ],
@@ -339,10 +337,10 @@ const HeroSection = () => {
       setApiError(null);
       try {
         const plateRaw = (values["plate"] ?? "").replace(/\s/g, "");
-        const limited  =  true;
+        const limited  = values["drivers"] !== "unlimited";
         const result   = await osagoCalculate({
           limited,
-          drivers: [00000000000000],
+          drivers: [],
           gosNumber: `${region}${plateRaw}`,
           techSery:  values["techSeries"] ?? "",
           techNumber: values["techNumber"] ?? "",
@@ -421,7 +419,7 @@ const HeroSection = () => {
             </div>
 
             {/* Fields */}
-            <div className="px-5 mt-4 mb-5 space-y-3">
+            <div className="  px-5 mt-4 mb-5 space-y-3">
               <div className="flex flex-col md:flex-row md:items-start gap-3 flex-wrap">
                 {fields.map((field) => (
                   <div key={field.id} className="flex-1 min-w-[140px]">
