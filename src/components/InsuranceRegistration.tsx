@@ -18,6 +18,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osagoPersonByDoc, type OsagoCalculateResponse } from '@/service/apis/osago.api';
+import { CustomSelect } from '@/components/ui/CustomSelect';
 
 const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
 
@@ -123,8 +124,8 @@ const InsuranceRegistration: React.FC = () => {
   const [ownerSeriya, setOwnerSeriya] = useState('');
   const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerInn, setOwnerInn] = useState('');
-  const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '', relative: '' }]);
-  const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([null]);
+  const [driverEntries, setDriverEntries] = useState<{ passSeriya: string; passNumber: string; birthDate: string; relative: string }[]>([]);
+  const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([]);
   const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
   const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
 
@@ -268,7 +269,7 @@ const InsuranceRegistration: React.FC = () => {
         owner: isJuridic
           ? { organization: { inn: ownerInn } }
           : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: isLimited ? driverEntries : [],
+        drivers: driverEntries,
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
@@ -424,7 +425,7 @@ const InsuranceRegistration: React.FC = () => {
                   </div>
 
                   {/* Drivers */}
-                  <div>
+                  {/* <div>
                     <label className={lbl}>Haydovchilar (JSHSHIR)</label>
                     <div className="flex gap-2">
                       <input
@@ -469,7 +470,7 @@ const InsuranceRegistration: React.FC = () => {
                         ))}
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Limited toggle */}
                   <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
@@ -477,7 +478,7 @@ const InsuranceRegistration: React.FC = () => {
                       <p className="text-sm font-medium text-gray-800">Haydovchilar cheklovi</p>
                       <p className="text-xs text-gray-400 mt-0.5">
                         {limited
-                          ? "Cheklangan — faqat ko'rsatilgan haydovchilar"
+                          ? "Cheklangan — 5 kishigacha haydovchi qo'shish mumkin "
                           : 'Cheklanmagan — istalgan haydovchi'}
                       </p>
                     </div>
@@ -643,9 +644,11 @@ const InsuranceRegistration: React.FC = () => {
                       </>
                     )}
 
-                    {isLimited && (
+                    {driverEntries.length > 0 && (
                       <>
-                        <p className="text-xs font-semibold text-gray-500">Haydovchilar pasporti</p>
+                        <p className="text-xs font-semibold text-gray-500">
+                          Haydovchilar pasporti{isLimited ? '' : ' (ixtiyoriy)'}
+                        </p>
 
                         {driverEntries.map((d, idx) => (
                           <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
@@ -654,7 +657,7 @@ const InsuranceRegistration: React.FC = () => {
                                 <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
                                 {driverPersons[idx] && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
                               </div>
-                              {driverEntries.length > 1 && (
+                              {(!isLimited || driverEntries.length > 1) && (
                                 <button type="button" onClick={() => removeDriver(idx)} className="text-xs text-red-400 hover:text-red-600">
                                   O'chirish
                                 </button>
@@ -696,29 +699,25 @@ const InsuranceRegistration: React.FC = () => {
                                 />
                               </div>
                               <div>
-                                <label className={lbl}>Qarindoshlik darajasi</label>
-                                <div className="relative">
-                                  <select
-                                    className={inp + ' appearance-none pr-7 ' + (!d.relative ? 'text-gray-400' : 'text-gray-900')}
-                                    value={d.relative}
-                                    onChange={(e) => updateDriver(idx, 'relative', e.target.value)}
-                                  >
-                                    <option value="" style={{ color: '#9ca3af', fontStyle: 'italic' }}>— Ixtiyoriy —</option>
-                                    <option value="1" style={{ color: '#111827' }}>Otasi</option>
-                                    <option value="2" style={{ color: '#111827' }}>Onasi</option>
-                                    <option value="3" style={{ color: '#111827' }}>Eri</option>
-                                    <option value="4" style={{ color: '#111827' }}>Xotini</option>
-                                    <option value="5" style={{ color: '#111827' }}>O'g'li</option>
-                                    <option value="6" style={{ color: '#111827' }}>Qizi</option>
-                                    <option value="7" style={{ color: '#111827' }}>Akasi</option>
-                                    <option value="8" style={{ color: '#111827' }}>Ukasi</option>
-                                    <option value="9" style={{ color: '#111827' }}>Opachasi</option>
-                                    <option value="10" style={{ color: '#111827' }}>Singlisi</option>
-                                    <option value="0" style={{ color: '#6b7280' }}>Qarindosh emas</option>
-
-                                  </select>
-                                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
-                                </div>
+                                <CustomSelect
+                                  label="Qarindoshlik darajasi"
+                                  value={d.relative}
+                                  onChange={(val) => updateDriver(idx, 'relative', val)}
+                                  placeholder="— Ixtiyoriy —"
+                                  options={[
+                                    { value: '0', label: 'Qarindosh emas' },
+                                    { value: '1', label: 'Otasi' },
+                                    { value: '2', label: 'Onasi' },
+                                    { value: '3', label: 'Eri' },
+                                    { value: '4', label: 'Xotini' },
+                                    { value: '5', label: "O'g'li" },
+                                    { value: '6', label: 'Qizi' },
+                                    { value: '7', label: 'Akasi' },
+                                    { value: '8', label: 'Ukasi' },
+                                    { value: '9', label: 'Opachasi' },
+                                    { value: '10', label: 'Singlisi' },
+                                  ]}
+                                />
                               </div>
                             </div>
 
@@ -752,7 +751,7 @@ const InsuranceRegistration: React.FC = () => {
                     )}
 
                     <div className="flex gap-3">
-                      {isLimited && driverEntries.length < 5 && (
+                      {driverEntries.length < 5 && (
                         <button
                           type="button"
                           onClick={addDriver}
@@ -827,7 +826,7 @@ const InsuranceRegistration: React.FC = () => {
               </div>
 
               {/* Verified drivers */}
-              {isLimited && driverPersons.some((p) => p !== null) && (
+              {driverPersons.some((p) => p !== null) && (
                 <div className="px-5 py-4 space-y-2">
                   <p className="text-xs font-semibold text-gray-500 mb-1">Tasdiqlangan haydovchilar ({driverPersons.length})</p>
                   {driverPersons.map((person, idx) =>
