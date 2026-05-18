@@ -42,7 +42,7 @@ const PaymentPage = () => {
         osagoConfirmPayment(contract.sqbContractId)
           .then((res) => setConfirmResult(res))
           .catch((err) =>
-            setConfirmError(err?.response?.data?.message ?? "To'lov tasdiqlanmadi. Qayta urinib ko'ring.")
+            setConfirmError(err?.response?.data?.error ?? "To'lov tasdiqlanmadi. Qayta urinib ko'ring.")
           )
           .finally(() => setConfirmLoading(false));
       }
@@ -151,7 +151,7 @@ const PaymentPage = () => {
         </div> */}
         <div className="flex flex-col md:flex-row gap-5 items-start">
           {/* Contract details card — chap */}
-          <div className="w-full md:flex-1 bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+          <div className="w-full md:flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-gray-50 to-white px-5 py-4 border-b border-gray-100">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-lg flex items-center justify-center">
@@ -229,7 +229,7 @@ const PaymentPage = () => {
                 <div className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
                   <span className="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">
-                    {contract.status === "active" ? "Faol" : contract.status === "pending" ? "Kutilmoqda" : contract.status}
+                    {contract.status === "ACTIVE" ? "Faol" : contract.status === "pending" ? "Kutilmoqda" : contract.status}
                   </span>
                 </div>
               </div>
@@ -456,7 +456,7 @@ const PaymentPage = () => {
                         setConfirmLoading(true);
                         osagoConfirmPayment(contract.sqbContractId)
                           .then((res) => setConfirmResult(res))
-                          .catch((err) => setConfirmError(err?.response?.data?.message ?? "Xatolik yuz berdi."))
+                          .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
                           .finally(() => setConfirmLoading(false));
                       }}
                       className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition"
@@ -500,7 +500,7 @@ const PaymentPage = () => {
                         setConfirmLoading(true);
                         osagoConfirmPayment(contract.sqbContractId)
                           .then((res) => setConfirmResult(res))
-                          .catch((err) => setConfirmError(err?.response?.data?.message ?? "Xatolik yuz berdi."))
+                          .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
                           .finally(() => setConfirmLoading(false));
                       }}
                       className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition"

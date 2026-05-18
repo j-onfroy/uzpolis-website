@@ -16,7 +16,7 @@ export interface OsagoCalculateResponse {
   limited: boolean;
   gosNumber: string;
   message: string;
-  juridic: boolean;
+  individual: boolean;
   vehicleType: string;
   techNumber: string;
   techSery: string;
@@ -54,6 +54,7 @@ export interface OsagoContractOwnerPerson {
 
 export interface OsagoContractRequest {
   calculationId: string;
+  identity: string;
   startDate: string;
   phoneNumber: string;
   owner: {
@@ -62,6 +63,15 @@ export interface OsagoContractRequest {
   };
   drivers: OsagoContractDriver[];
 }
+
+export const osagoSmsSend = async (phoneNumber: string): Promise<void> => {
+  await api.post("/api/v1/osago/sms/send", { phoneNumber });
+};
+
+export const osagoSmsVerify = async (phoneNumber: string, code: string): Promise<{ identity: string }> => {
+  const { data } = await api.post("/api/v1/osago/sms/verify", { phoneNumber, code });
+  return data.data ?? data;
+};
 
 export const osagoCalculate = async (body: OsagoCalculateRequest): Promise<OsagoCalculateResponse> => {
   const { data } = await api.post("/api/v1/osago/calculate", body);

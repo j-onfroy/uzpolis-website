@@ -9,9 +9,25 @@ type FieldType = "text" | "plate" | "select" | "date" | "number";
 
 // ── Formatters ──────────────────────────────────────────────────────────────
 
-/** A 123 BC — 1 harf, 3 raqam, 2 harf, avtomatik bo'sh joy */
+/** A 123 BC — 1 harf, 3 raqam, 2 harf  |  641 BNA — 3 raqam, 3 harf */
 function formatPlate(input: string): string {
   const raw = input.replace(/\s/g, "").toUpperCase();
+  if (!raw) return "";
+  if (/^\d/.test(raw)) {
+    // Format: 3 digits + 3 letters (e.g., 641 BNA)
+    const chars: string[] = [];
+    let dc = 0, lc = 0;
+    for (const ch of raw) {
+      if (dc < 3 && /\d/.test(ch)) { chars.push(ch); dc++; }
+      else if (dc === 3 && lc < 3 && /[A-Z]/.test(ch)) { chars.push(ch); lc++; }
+      if (lc >= 3) break;
+    }
+    if (!chars.length) return "";
+    let out = chars.slice(0, 3).join("");
+    if (chars.length > 3) out += " " + chars.slice(3).join("");
+    return out;
+  }
+  // Format: 1 letter + 3 digits + 2 letters (e.g., A 123 BC)
   const chars: string[] = [];
   let pos = 0;
   for (const ch of raw) {
@@ -90,9 +106,9 @@ const FIELDS: Record<string, FieldDef[]> = {
       id: "plate",
       label: "Davlat raqami",
       type: "plate",
-      placeholder: "A 123 BC",
-      regex: /^[A-Za-z]\s?\d{3}\s?[A-Za-z]{2}$/,
-      errorMsg: "Format: A 123 BC",
+      placeholder: "A 123 BC ",
+      regex: /^([A-Za-z]\s?\d{3}\s?[A-Za-z]{2}|\d{3}\s?[A-Za-z]{3})$/,
+      errorMsg: "Format: A 123 BC yoki 641 BNA",
     },
     {
       id: "techSeries",
@@ -118,11 +134,7 @@ const FIELDS: Record<string, FieldDef[]> = {
       placeholder: "Tanlang",
       options: [
         { value: "unlimited", label: "Cheklanmagan" },
-        { value: "1", label: "1 nafar" },
-        { value: "2", label: "2 nafar" },
-        { value: "3", label: "3 nafar" },
-        { value: "4", label: "4 nafar" },
-        { value: "5+", label: "5 va undan ko'p" },
+        { value: "limited", label: "Cheklangan (5 kishigacha haydovchi )" },
       ],
     },
     {
@@ -285,23 +297,25 @@ const FIELDS: Record<string, FieldDef[]> = {
 };
 
 const inputBase =
-  "w-full px-3 py-2.5 text-sm rounded-xl border outline-none transition-colors bg-white placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10";
+  "w-full px-3 py-3 text-base rounded-xl border outline-none transition-colors bg-white placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10";
 
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("OSAGO");
-  const [values, setValues]       = useState<Record<string, string>>({});
-  const [errors, setErrors]       = useState<Record<string, string>>({});
-  const [region, setRegion]       = useState("01");
-  const [loading, setLoading]     = useState(false);
-  const [apiError, setApiError]   = useState<string | null>(null);
+  const [allValues, setAllValues] = useState<Record<string, Record<string, string>>>(() => {
+    try { return JSON.parse(localStorage.getItem("hero_form_values") ?? "{}"); } catch { return {}; }
+  });
+  const [errors, setErrors]   = useState<Record<string, string>>({});
+  const [region, setRegion]   = useState(() => localStorage.getItem("hero_form_region") ?? "01");
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const values = allValues[activeTab] ?? {};
   const fields = FIELDS[activeTab] ?? [];
 
   const handleTabChange = (id: string) => {
     setActiveTab(id);
-    setValues({});
     setErrors({});
     setApiError(null);
   };
@@ -319,8 +333,18 @@ const HeroSection = () => {
 
   const handleChange = (id: string, raw: string) => {
     const formatted = FORMATTERS[id] ? FORMATTERS[id](raw) : raw;
-    setValues((prev) => ({ ...prev, [id]: formatted }));
+    setAllValues((prev) => {
+      const next = { ...prev, [activeTab]: { ...(prev[activeTab] ?? {}), [id]: formatted } };
+      localStorage.setItem("hero_form_values", JSON.stringify(next));
+      return next;
+    });
     if (errors[id]) setErrors((prev) => ({ ...prev, [id]: "" }));
+  };
+
+  const handleRegionChange = (val: string) => {
+    const v = val.replace(/\D/g, "").slice(0, 2);
+    setRegion(v);
+    localStorage.setItem("hero_form_region", v);
   };
 
   const handleSubmit = async () => {
@@ -346,9 +370,21 @@ const HeroSection = () => {
           techNumber: values["techNumber"] ?? "",
           periodId:  Number(values["period"] ?? "1"),
         });
-        navigate("/osago/result", { state: { result } });
+        navigate("/register", {
+          state: {
+            calcResult: result,
+            formData: {
+              gosNumber:  values["plate"] ?? "",
+              techSery:   values["techSeries"] ?? "",
+              techNumber: values["techNumber"] ?? "",
+              periodId:   Number(values["period"] ?? "1"),
+              limited,
+              region,
+            },
+          },
+        });
       } catch (err: any) {
-        setApiError(err?.response?.data?.message ?? "Xatolik yuz berdi. Qayta urinib ko'ring.");
+        setApiError(err?.response?.data?.error ?? "Xatolik yuz berdi. Qayta urinib ko'ring.");
       } finally {
         setLoading(false);
       }
@@ -423,7 +459,7 @@ const HeroSection = () => {
               <div className="flex flex-col md:flex-row md:items-start gap-3 flex-wrap">
                 {fields.map((field) => (
                   <div key={field.id} className="flex-1 min-w-[140px]">
-                    <label className="block text-xs font-medium text-muted-foreground mb-1.5">{field.label}</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-1.5">{field.label}</label>
 
                     {field.type === "plate" && (
                       <div className={`flex items-stretch border rounded-xl overflow-hidden transition-colors ${
@@ -433,15 +469,15 @@ const HeroSection = () => {
                       }`}>
                         <div className="flex flex-col items-center justify-center px-2.5 bg-muted border-r border-border min-w-[44px] gap-0.5">
                           <input
-                            className="w-8 text-xs font-bold text-center bg-transparent outline-none leading-none"
+                            className="w-8 text-sm font-bold text-center bg-transparent outline-none leading-none"
                             value={region}
                             maxLength={2}
-                            onChange={(e) => setRegion(e.target.value.replace(/\D/g, "").slice(0, 2))}
+                            onChange={(e) => handleRegionChange(e.target.value)}
                           />
                           <span className="text-[9px] text-muted-foreground leading-none">UZ</span>
                         </div>
                         <input
-                          className="flex-1 px-3 py-2.5 text-sm outline-none bg-transparent placeholder:text-muted-foreground"
+                          className="flex-1 px-3 py-3 text-base outline-none bg-transparent placeholder:text-muted-foreground"
                           placeholder={field.placeholder}
                           value={values[field.id] ?? ""}
                           onChange={(e) => handleChange(field.id, e.target.value)}
