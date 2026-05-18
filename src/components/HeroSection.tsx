@@ -143,8 +143,8 @@ const FIELDS: Record<string, FieldDef[]> = {
       type: "select",
       placeholder: "Tanlang",
       options: [
-        { value: "1", label: "3 oy" },
-        { value: "2", label: "12 oy" },
+        { value: "2", label: "6 oy" },
+        { value: "1", label: "12 oy" },
       ],
     },
   ],

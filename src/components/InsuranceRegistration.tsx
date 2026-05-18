@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, type OsagoCalculateResponse } from '@/service/apis/osago.api';
 
-const PERIOD_LABELS: Record<number, string> = { 1: '3 oy', 2: '12 oy' };
+const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
 
 const inp =
   'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400';
