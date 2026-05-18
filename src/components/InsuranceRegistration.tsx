@@ -21,6 +21,12 @@ import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osag
 
 const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
 
+const RELATIVE_LABELS: Record<string, string> = {
+  '1': 'Otasi', '2': 'Onasi', '3': 'Eri',
+  '4': 'Xotini', '5': "O'g'li", '6': 'Qizi', '7': 'Akasi',
+  '8': 'Ukasi', '9': 'Opachasi', '10': 'Singlisi', '0': 'Qarindosh emas'
+};
+
 const PERSON_FIELD_LABELS: Record<string, string> = {
   firstName: 'Ismi',
   lastName: 'Familiyasi',
@@ -117,17 +123,17 @@ const InsuranceRegistration: React.FC = () => {
   const [ownerSeriya, setOwnerSeriya] = useState('');
   const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerInn, setOwnerInn] = useState('');
-  const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '' }]);
+  const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '', relative: '' }]);
   const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([null]);
   const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
   const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
 
-  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate', val: string) => {
+  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate' | 'relative', val: string) => {
     setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
     setDriverPersons((prev) => prev.map((p, i) => (i === idx ? null : p)));
   };
   const addDriver = () => {
-    setDriverEntries((prev) => [...prev, { passSeriya: '', passNumber: '', birthDate: '' }]);
+    setDriverEntries((prev) => [...prev, { passSeriya: '', passNumber: '', birthDate: '', relative: '' }]);
     setDriverPersons((prev) => [...prev, null]);
   };
   const removeDriver = (idx: number) => {
@@ -443,9 +449,9 @@ const InsuranceRegistration: React.FC = () => {
                           }
                         }}
                         disabled={driverInput.length !== 14}
-                        className="px-4 py-2.5 bg-blue-600 text-white text-xs font-semibold rounded-xl disabled:opacity-40 transition hover:bg-blue-700 flex-shrink-0"
+                        className="max-w-10 px-4 py-2.5 bg-blue-600 text-white text-xs font-semibold rounded-xl disabled:opacity-40 transition hover:bg-blue-700 flex-shrink-0"
                       >
-                        Qo'shish
+                        + Qo'shish
                       </button>
                     </div>
                     {drivers.length > 0 && (
@@ -639,18 +645,7 @@ const InsuranceRegistration: React.FC = () => {
 
                     {isLimited && (
                       <>
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs font-semibold text-gray-500">Haydovchilar pasporti</p>
-                          {driverEntries.length < 5 && (
-                            <button
-                              type="button"
-                              onClick={addDriver}
-                              className="text-xs text-blue-600 font-medium hover:underline"
-                            >
-                              + Haydovchi qo'shish
-                            </button>
-                          )}
-                        </div>
+                        <p className="text-xs font-semibold text-gray-500">Haydovchilar pasporti</p>
 
                         {driverEntries.map((d, idx) => (
                           <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
@@ -690,14 +685,41 @@ const InsuranceRegistration: React.FC = () => {
                               </div>
                             </div>
 
-                            <div>
-                              <label className={lbl}>Tug'ilgan sana</label>
-                              <input
-                                type="date"
-                                className={inp}
-                                value={d.birthDate}
-                                onChange={(e) => updateDriver(idx, 'birthDate', e.target.value)}
-                              />
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className={lbl}>Tug'ilgan sana</label>
+                                <input
+                                  type="date"
+                                  className={inp}
+                                  value={d.birthDate}
+                                  onChange={(e) => updateDriver(idx, 'birthDate', e.target.value)}
+                                />
+                              </div>
+                              <div>
+                                <label className={lbl}>Qarindoshlik darajasi</label>
+                                <div className="relative">
+                                  <select
+                                    className={inp + ' appearance-none pr-7 ' + (!d.relative ? 'text-gray-400' : 'text-gray-900')}
+                                    value={d.relative}
+                                    onChange={(e) => updateDriver(idx, 'relative', e.target.value)}
+                                  >
+                                    <option value="" style={{ color: '#9ca3af', fontStyle: 'italic' }}>— Ixtiyoriy —</option>
+                                    <option value="1" style={{ color: '#111827' }}>Otasi</option>
+                                    <option value="2" style={{ color: '#111827' }}>Onasi</option>
+                                    <option value="3" style={{ color: '#111827' }}>Eri</option>
+                                    <option value="4" style={{ color: '#111827' }}>Xotini</option>
+                                    <option value="5" style={{ color: '#111827' }}>O'g'li</option>
+                                    <option value="6" style={{ color: '#111827' }}>Qizi</option>
+                                    <option value="7" style={{ color: '#111827' }}>Akasi</option>
+                                    <option value="8" style={{ color: '#111827' }}>Ukasi</option>
+                                    <option value="9" style={{ color: '#111827' }}>Opachasi</option>
+                                    <option value="10" style={{ color: '#111827' }}>Singlisi</option>
+                                    <option value="0" style={{ color: '#6b7280' }}>Qarindosh emas</option>
+
+                                  </select>
+                                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                                </div>
+                              </div>
                             </div>
 
                             {d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate && !driverPersons[idx] && (
@@ -729,17 +751,28 @@ const InsuranceRegistration: React.FC = () => {
                       </div>
                     )}
 
-                    <button
-                      onClick={handleSendSms}
-                      disabled={contractLoading || !canSubmitContract}
-                      className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200"
-                    >
-                      {contractLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>Ariza yuborish <ArrowRight className="w-4 h-4" /></>
+                    <div className="flex gap-3">
+                      {isLimited && driverEntries.length < 5 && (
+                        <button
+                          type="button"
+                          onClick={addDriver}
+                          className="flex items-center justify-center gap-1.5 px-5 py-3 border border-blue-300 text-blue-600 rounded-xl font-semibold text-sm hover:bg-blue-50 transition-all flex-shrink-0"
+                        >
+                          + Haydovchi
+                        </button>
                       )}
-                    </button>
+                      <button
+                        onClick={handleSendSms}
+                        disabled={contractLoading || !canSubmitContract}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200"
+                      >
+                        {contractLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>Ariza yuborish <ArrowRight className="w-4 h-4" /></>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </>
@@ -814,6 +847,11 @@ const InsuranceRegistration: React.FC = () => {
                           <div className="flex items-center gap-2 min-w-0">
                             <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
                             <span className="text-xs font-semibold text-gray-800 truncate">{person.fullName}</span>
+                            {driverEntries[idx]?.relative && (
+                              <span className="text-[10px] text-gray-400 bg-gray-100 rounded px-1.5 py-0.5 flex-shrink-0">
+                                {RELATIVE_LABELS[driverEntries[idx].relative] ?? driverEntries[idx].relative}
+                              </span>
+                            )}
                           </div>
                           <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${expandedDrivers.has(idx) ? 'rotate-180' : ''}`} />
                         </button>

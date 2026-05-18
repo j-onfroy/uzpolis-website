@@ -107,7 +107,7 @@ const Footer = () => {
 
         <div className="pt-6 border-t border-primary-foreground/10 text-center">
           <p className="text-primary-foreground/50 text-sm">
-            © 2024 UZPOLIS. Barcha huquqlar himoyalangan.
+            © {new Date().getFullYear()} UZPOLIS. Barcha huquqlar himoyalangan.
           </p>
         </div>
       </div>
