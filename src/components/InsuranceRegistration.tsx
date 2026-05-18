@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
   ChevronRight,
@@ -14,8 +14,9 @@ import {
   AlertCircle,
   Loader2,
   ArrowRight,
+  MessageCircle,
 } from 'lucide-react';
-import { osagoCalculate, osagoCreateContract, type OsagoCalculateResponse } from '@/service/apis/osago.api';
+import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, type OsagoCalculateResponse } from '@/service/apis/osago.api';
 
 const PERIOD_LABELS: Record<number, string> = { 1: '3 oy', 2: '12 oy' };
 
@@ -45,6 +46,7 @@ const InfoCard = ({
 
 const InsuranceRegistration: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [phase, setPhase] = useState<'calculate' | 'contract'>('calculate');
 
   // Calculation fields
@@ -64,27 +66,56 @@ const InsuranceRegistration: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [ownerSeriya, setOwnerSeriya] = useState('');
   const [ownerNumber, setOwnerNumber] = useState('');
-  const [passSeriya, setPassSeriya] = useState('');
-  const [passNumber, setPassNumber] = useState('');
-  const [birthDate, setBirthDate] = useState('');
+  const [ownerInn, setOwnerInn] = useState('');
+  const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '' }]);
+
+  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate', val: string) =>
+    setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
+  const addDriver = () =>
+    setDriverEntries((prev) => [...prev, { passSeriya: '', passNumber: '', birthDate: '' }]);
+  const removeDriver = (idx: number) =>
+    setDriverEntries((prev) => prev.filter((_, i) => i !== idx));
   const [contractLoading, setContractLoading] = useState(false);
   const [contractError, setContractError] = useState<string | null>(null);
 
+  // SMS verification
+  const [showSmsModal, setShowSmsModal] = useState(false);
+  const [smsCode, setSmsCode] = useState('');
+  const [smsLoading, setSmsLoading] = useState(false);
+  const [smsError, setSmsError] = useState<string | null>(null);
+
   const handleGosNumber = (val: string) => {
     const raw = val.replace(/\s/g, '').toUpperCase();
-    const chars: string[] = [];
-    let pos = 0;
-    for (const ch of raw) {
-      if (pos === 0 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
-      else if (pos >= 1 && pos <= 3 && /\d/.test(ch)) { chars.push(ch); pos++; }
-      else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
-      if (pos > 5) break;
+    if (!raw) { setGosNumber(''); return; }
+    if (/^\d/.test(raw)) {
+      // Format: 3 digits + 3 letters (e.g., 641BNA)
+      const chars: string[] = [];
+      let dc = 0, lc = 0;
+      for (const ch of raw) {
+        if (dc < 3 && /\d/.test(ch)) { chars.push(ch); dc++; }
+        else if (dc === 3 && lc < 3 && /[A-Z]/.test(ch)) { chars.push(ch); lc++; }
+        if (lc >= 3) break;
+      }
+      if (!chars.length) { setGosNumber(''); return; }
+      let out = chars.slice(0, 3).join('');
+      if (chars.length > 3) out += ' ' + chars.slice(3).join('');
+      setGosNumber(out);
+    } else {
+      // Format: 1 letter + 3 digits + 2 letters (e.g., A123AB)
+      const chars: string[] = [];
+      let pos = 0;
+      for (const ch of raw) {
+        if (pos === 0 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
+        else if (pos >= 1 && pos <= 3 && /\d/.test(ch)) { chars.push(ch); pos++; }
+        else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
+        if (pos > 5) break;
+      }
+      if (!chars.length) { setGosNumber(''); return; }
+      let out = chars[0];
+      if (chars.length >= 2) out += ' ' + chars.slice(1, Math.min(4, chars.length)).join('');
+      if (chars.length >= 5) out += ' ' + chars.slice(4).join('');
+      setGosNumber(out);
     }
-    if (!chars.length) { setGosNumber(''); return; }
-    let out = chars[0];
-    if (chars.length >= 2) out += ' ' + chars.slice(1, Math.min(4, chars.length)).join('');
-    if (chars.length >= 5) out += ' ' + chars.slice(4).join('');
-    setGosNumber(out);
   };
 
   const canCalculate =
@@ -93,13 +124,13 @@ const InsuranceRegistration: React.FC = () => {
     techNumber.length === 7;
 
   const isLimited = calcResult?.limited ?? false;
+  const isJuridic = !calcResult?.individual ;
 
   const canSubmitContract =
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
-    ownerSeriya.length === 2 &&
-    ownerNumber.length === 7 &&
-    (!isLimited || (passSeriya.length === 2 && passNumber.length === 7 && !!birthDate));
+    (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) &&
+    (!isLimited || (driverEntries.length > 0 && driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate)));
 
   const handleCalculate = async () => {
     setCalcLoading(true);
@@ -117,29 +148,52 @@ const InsuranceRegistration: React.FC = () => {
       setPhase('contract');
       window.scrollTo(0, 0);
     } catch (err: any) {
-      setCalcError(err?.response?.data?.message ?? 'Hisoblashda xatolik yuz berdi.');
+      setCalcError(err?.response?.data?.error ?? 'Hisoblashda xatolik yuz berdi.');
     } finally {
       setCalcLoading(false);
     }
   };
 
-  const handleCreateContract = async () => {
+  const formattedPhone = '+' + phoneNumber.replace(/\D/g, '');
+
+  const handleSendSms = async () => {
     if (!calcResult) return;
     setContractLoading(true);
     setContractError(null);
     try {
-      const contract = await osagoCreateContract({
-        calculationId: calcResult.id,
-        startDate,
-        phoneNumber: phoneNumber.replace(/\s/g, ''),
-        owner: { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: isLimited ? [{ passSeriya, passNumber, birthDate }] : [],
-      });
-      navigate('/osago/payment', { state: { contract } });
+      await osagoSmsSend(formattedPhone);
+      setSmsCode('');
+      setSmsError(null);
+      setShowSmsModal(true);
     } catch (err: any) {
-      setContractError(err?.response?.data?.message ?? 'Ariza yuborishda xatolik yuz berdi.');
+      setContractError(err?.response?.data?.error ?? 'SMS yuborishda xatolik yuz berdi.');
     } finally {
       setContractLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!calcResult) return;
+    setSmsLoading(true);
+    setSmsError(null);
+    try {
+      const { identity } = await osagoSmsVerify(formattedPhone, smsCode);
+      const contract = await osagoCreateContract({
+        calculationId: calcResult.id,
+        identity,
+        startDate,
+        phoneNumber: formattedPhone,
+        owner: isJuridic
+          ? { organization: { inn: ownerInn } }
+          : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
+        drivers: isLimited ? driverEntries : [],
+      });
+      setShowSmsModal(false);
+      navigate('/osago/payment', { state: { contract } });
+    } catch (err: any) {
+      setSmsError(err?.response?.data?.error ?? 'Kod noto\'g\'ri yoki muddati tugagan.');
+    } finally {
+      setSmsLoading(false);
     }
   };
 
@@ -151,6 +205,19 @@ const InsuranceRegistration: React.FC = () => {
   ];
   useEffect(() => {
     window.scrollTo(0, 0);
+    const state = location.state as any;
+    if (state?.calcResult) {
+      setCalcResult(state.calcResult);
+      setPhase('contract');
+      if (state.formData) {
+        const fd = state.formData;
+        setGosNumber(fd.gosNumber ?? '');
+        setTechSery(fd.techSery ?? '');
+        setTechNumber(fd.techNumber ?? '');
+        setPeriodId(fd.periodId ?? 1);
+        setLimited(fd.limited ?? false);
+      }
+    }
   }, [])
   return (
     <div className="min-h-screen bg-[#f5f7fb] pb-20">
@@ -451,36 +518,21 @@ const InsuranceRegistration: React.FC = () => {
                       </div>
                     </div>
 
-                    <p className="text-xs font-semibold text-gray-500">Egasi pasporti</p>
-                    <div className="grid grid-cols-2 gap-3">
+                    {isJuridic ? (
                       <div>
-                        <label className={lbl}>Seriya</label>
+                        <label className={lbl}>Tashkilot INN *</label>
                         <input
                           className={inp}
-                          placeholder="AB"
-                          maxLength={2}
-                          value={ownerSeriya}
-                          onChange={(e) =>
-                            setOwnerSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={lbl}>Raqam</label>
-                        <input
-                          className={inp}
-                          placeholder="0000000"
-                          maxLength={7}
+                          placeholder="123456789"
                           inputMode="numeric"
-                          value={ownerNumber}
-                          onChange={(e) => setOwnerNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
+                          maxLength={9}
+                          value={ownerInn}
+                          onChange={(e) => setOwnerInn(e.target.value.replace(/\D/g, '').slice(0, 9))}
                         />
                       </div>
-                    </div>
-
-                    {isLimited && (
+                    ) : (
                       <>
-                        <p className="text-xs font-semibold text-gray-500">Haydovchi ma'lumotlari</p>
+                        <p className="text-xs font-semibold text-gray-500">Egasi pasporti</p>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className={lbl}>Seriya</label>
@@ -488,9 +540,9 @@ const InsuranceRegistration: React.FC = () => {
                               className={inp}
                               placeholder="AB"
                               maxLength={2}
-                              value={passSeriya}
+                              value={ownerSeriya}
                               onChange={(e) =>
-                                setPassSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
+                                setOwnerSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
                               }
                             />
                           </div>
@@ -501,20 +553,81 @@ const InsuranceRegistration: React.FC = () => {
                               placeholder="0000000"
                               maxLength={7}
                               inputMode="numeric"
-                              value={passNumber}
-                              onChange={(e) => setPassNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
+                              value={ownerNumber}
+                              onChange={(e) => setOwnerNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
                             />
                           </div>
                         </div>
-                        <div>
-                          <label className={lbl}>Tug'ilgan sana *</label>
-                          <input
-                            type="date"
-                            className={inp}
-                            value={birthDate}
-                            onChange={(e) => setBirthDate(e.target.value)}
-                          />
+                      </>
+                    )}
+
+                    {isLimited && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-semibold text-gray-500">Haydovchilar pasporti</p>
+                          {driverEntries.length < 5 && (
+                            <button
+                              type="button"
+                              onClick={addDriver}
+                              className="text-xs text-blue-600 font-medium hover:underline"
+                            >
+                              + Haydovchi qo'shish
+                            </button>
+                          )}
                         </div>
+
+                        {driverEntries.map((d, idx) => (
+                          <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
+                              {driverEntries.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeDriver(idx)}
+                                  className="text-xs text-red-400 hover:text-red-600"
+                                >
+                                  O'chirish
+                                </button>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className={lbl}>Seriya</label>
+                                <input
+                                  className={inp}
+                                  placeholder="AB"
+                                  maxLength={2}
+                                  value={d.passSeriya}
+                                  onChange={(e) =>
+                                    updateDriver(idx, 'passSeriya', e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
+                                  }
+                                />
+                              </div>
+                              <div>
+                                <label className={lbl}>Raqam</label>
+                                <input
+                                  className={inp}
+                                  placeholder="0000000"
+                                  maxLength={7}
+                                  inputMode="numeric"
+                                  value={d.passNumber}
+                                  onChange={(e) =>
+                                    updateDriver(idx, 'passNumber', e.target.value.replace(/\D/g, '').slice(0, 7))
+                                  }
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className={lbl}>Tug'ilgan sana</label>
+                              <input
+                                type="date"
+                                className={inp}
+                                value={d.birthDate}
+                                onChange={(e) => updateDriver(idx, 'birthDate', e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </>
                     )}
 
@@ -526,7 +639,7 @@ const InsuranceRegistration: React.FC = () => {
                     )}
 
                     <button
-                      onClick={handleCreateContract}
+                      onClick={handleSendSms}
                       disabled={contractLoading || !canSubmitContract}
                       className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200"
                     >
@@ -593,6 +706,67 @@ const InsuranceRegistration: React.FC = () => {
         </div>
       </div>
 
+      {/* SMS verification modal */}
+      {showSmsModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div className="px-6 pt-6 pb-5">
+              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="w-6 h-6 text-blue-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900 text-center">SMS tasdiqlash</h2>
+              <p className="text-sm text-gray-500 text-center mt-1">
+                <span className="font-semibold text-gray-700">{formattedPhone}</span> raqamiga kod yuborildi
+              </p>
+
+              <div className="mt-5">
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Tasdiqlash kodi</label>
+                <input
+                  className="w-full px-4 py-3 text-center text-2xl font-bold tracking-[0.5em] border border-gray-200 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-colors"
+                  placeholder="————"
+                  inputMode="numeric"
+                  maxLength={4}
+                  value={smsCode}
+                  onChange={(e) => { setSmsCode(e.target.value.replace(/\D/g, '').slice(0, 4)); setSmsError(null); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && smsCode.length >= 4) handleVerifyCode(); }}
+                  autoFocus
+                />
+              </div>
+
+              {smsError && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 mt-3">
+                  <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                  <p className="text-xs text-red-600">{smsError}</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleVerifyCode}
+                disabled={smsLoading || smsCode.length < 4}
+                className="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+              >
+                {smsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Tasdiqlash <ArrowRight className="w-4 h-4" /></>}
+              </button>
+
+              <div className="flex items-center justify-between mt-3">
+                <button
+                  onClick={() => { setShowSmsModal(false); setSmsCode(''); setSmsError(null); }}
+                  className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  Bekor qilish
+                </button>
+                <button
+                  onClick={async () => { setSmsCode(''); setSmsError(null); try { await osagoSmsSend(formattedPhone); } catch { setSmsError('Qayta yuborishda xatolik.'); } }}
+                  className="text-xs text-blue-600 font-medium hover:underline"
+                >
+                  Qayta yuborish
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Fixed bottom nav */}
       <div className="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
@@ -620,7 +794,7 @@ const InsuranceRegistration: React.FC = () => {
             </button>
           ) : (
             <button
-              onClick={handleCreateContract}
+              onClick={handleSendSms}
               disabled={contractLoading || !canSubmitContract}
               className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition"
             >

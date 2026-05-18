@@ -46,6 +46,7 @@ const OsagoResult = () => {
     startDate: "",
     ownerSeriya: "",
     ownerNumber: "",
+    ownerInn: "",
     passSeriya: "",
     passNumber: "",
     birthDate: "",
@@ -79,19 +80,16 @@ const OsagoResult = () => {
         calculationId: result.id,
         startDate: form.startDate,
         phoneNumber: form.phoneNumber.replace(/\D/g, ''),
-        owner: {
-          person: {
-            passSeriya: form.ownerSeriya,
-            passNumber: form.ownerNumber,
-          },
-        },
+        owner: !result.individual
+          ? { organization: { inn: form.ownerInn } }
+          : { person: { passSeriya: form.ownerSeriya, passNumber: form.ownerNumber } },
         drivers: result.limited
           ? [{ passSeriya: form.passSeriya, passNumber: form.passNumber, birthDate: form.birthDate }]
           : [],
       });
       navigate("/osago/payment", { state: { contract } });
     } catch (err: any) {
-      setModalError(err?.response?.data?.message ?? "Ariza yuborishda xatolik yuz berdi.");
+      setModalError(err?.response?.data?.error ?? "Ariza yuborishda xatolik yuz berdi.");
     } finally {
       setModalLoading(false);
     }
@@ -100,8 +98,7 @@ const OsagoResult = () => {
   const canSubmit =
     form.phoneNumber.replace(/\D/g, '').length === 12 &&
     form.startDate &&
-    form.ownerSeriya.length >= 2 &&
-    form.ownerNumber.length >= 7 &&
+    (!result.individual ? form.ownerInn.length >= 9 : form.ownerSeriya.length >= 2 && form.ownerNumber.length >= 7) &&
     (!result.limited || (form.passSeriya.length >= 2 && form.passNumber.length >= 7 && form.birthDate));
 
   useEffect(() => {
@@ -145,7 +142,6 @@ const OsagoResult = () => {
           <div className="text-right">
             <div className="text-xs text-blue-200 mb-1">Muddat</div>
             <div className="text-lg font-bold">{PERIOD_LABELS[result.periodId] ?? `${result.periodId}-davr`}</div>
-            <div className="text-xs text-blue-200 mt-1">{result.limited ? "Cheklangan" : "Cheklanmagan"}</div>
           </div>
         </div>
 
@@ -163,7 +159,7 @@ const OsagoResult = () => {
             <InfoCard icon={Hash} label="Davlat raqami" value={result.gosNumber} />
             <InfoCard icon={FileText} label="Texnik pasport" value={`${result.techSery} ${result.techNumber}`} />
             <InfoCard icon={Car} label="Transport turi" value={result.vehicleType} />
-            <InfoCard icon={Shield} label="Shaxs turi" value={result.juridic ? "Yuridik shaxs" : "Jismoniy shaxs"} />
+            <InfoCard icon={Shield} label="Shaxs turi" value={ !result.individual ? "Yuridik shaxs" : "Jismoniy shaxs"} />
           </div>
         </div>
 
@@ -239,35 +235,51 @@ const OsagoResult = () => {
                     />
                   </div>
 
-                  {/* Owner passport */}
-                  <p className="text-xs font-semibold text-gray-500 pt-1">Egasi pasporti</p>
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
+                  {/* Owner info */}
+                  {!result.individual ? (
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Tashkilot INN</label>
                       <input
                         className={inp}
-                        placeholder="AB"
-                        maxLength={2}
-                        value={form.ownerSeriya}
-                        onChange={(e) =>
-                          setField("ownerSeriya", e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 2))
-                        }
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
-                      <input
-                        className={inp}
-                        placeholder="0000000"
-                        maxLength={7}
+                        placeholder="123456789"
                         inputMode="numeric"
-                        value={form.ownerNumber}
-                        onChange={(e) =>
-                          setField("ownerNumber", e.target.value.replace(/\D/g, "").slice(0, 7))
-                        }
+                        maxLength={9}
+                        value={form.ownerInn}
+                        onChange={(e) => setField("ownerInn", e.target.value.replace(/\D/g, "").slice(0, 9))}
                       />
                     </div>
-                  </div>
+                  ) : (
+                    <>
+                      <p className="text-xs font-semibold text-gray-500 pt-1">Egasi pasporti</p>
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">Seriya</label>
+                          <input
+                            className={inp}
+                            placeholder="AB"
+                            maxLength={2}
+                            value={form.ownerSeriya}
+                            onChange={(e) =>
+                              setField("ownerSeriya", e.target.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 2))
+                            }
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">Raqam</label>
+                          <input
+                            className={inp}
+                            placeholder="0000000"
+                            maxLength={7}
+                            inputMode="numeric"
+                            value={form.ownerNumber}
+                            onChange={(e) =>
+                              setField("ownerNumber", e.target.value.replace(/\D/g, "").slice(0, 7))
+                            }
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   {/* Driver passport — only when limited */}
                   {result.limited && (
