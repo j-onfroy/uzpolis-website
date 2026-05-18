@@ -67,9 +67,14 @@ const InsuranceRegistration: React.FC = () => {
   const [ownerSeriya, setOwnerSeriya] = useState('');
   const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerInn, setOwnerInn] = useState('');
-  const [passSeriya, setPassSeriya] = useState('');
-  const [passNumber, setPassNumber] = useState('');
-  const [birthDate, setBirthDate] = useState('');
+  const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '' }]);
+
+  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate', val: string) =>
+    setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
+  const addDriver = () =>
+    setDriverEntries((prev) => [...prev, { passSeriya: '', passNumber: '', birthDate: '' }]);
+  const removeDriver = (idx: number) =>
+    setDriverEntries((prev) => prev.filter((_, i) => i !== idx));
   const [contractLoading, setContractLoading] = useState(false);
   const [contractError, setContractError] = useState<string | null>(null);
 
@@ -125,7 +130,7 @@ const InsuranceRegistration: React.FC = () => {
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
     (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) &&
-    (!isLimited || (passSeriya.length === 2 && passNumber.length === 7 && !!birthDate));
+    (!isLimited || (driverEntries.length > 0 && driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate)));
 
   const handleCalculate = async () => {
     setCalcLoading(true);
@@ -181,7 +186,7 @@ const InsuranceRegistration: React.FC = () => {
         owner: isJuridic
           ? { organization: { inn: ownerInn } }
           : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: isLimited ? [{ passSeriya, passNumber, birthDate }] : [],
+        drivers: isLimited ? driverEntries : [],
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
@@ -558,41 +563,71 @@ const InsuranceRegistration: React.FC = () => {
 
                     {isLimited && (
                       <>
-                        <p className="text-xs font-semibold text-gray-500">Haydovchi ma'lumotlari</p>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className={lbl}>Seriya</label>
-                            <input
-                              className={inp}
-                              placeholder="AB"
-                              maxLength={2}
-                              value={passSeriya}
-                              onChange={(e) =>
-                                setPassSeriya(e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
-                              }
-                            />
-                          </div>
-                          <div>
-                            <label className={lbl}>Raqam</label>
-                            <input
-                              className={inp}
-                              placeholder="0000000"
-                              maxLength={7}
-                              inputMode="numeric"
-                              value={passNumber}
-                              onChange={(e) => setPassNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
-                            />
-                          </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-semibold text-gray-500">Haydovchilar pasporti</p>
+                          {driverEntries.length < 5 && (
+                            <button
+                              type="button"
+                              onClick={addDriver}
+                              className="text-xs text-blue-600 font-medium hover:underline"
+                            >
+                              + Haydovchi qo'shish
+                            </button>
+                          )}
                         </div>
-                        <div>
-                          <label className={lbl}>Tug'ilgan sana *</label>
-                          <input
-                            type="date"
-                            className={inp}
-                            value={birthDate}
-                            onChange={(e) => setBirthDate(e.target.value)}
-                          />
-                        </div>
+
+                        {driverEntries.map((d, idx) => (
+                          <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
+                              {driverEntries.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeDriver(idx)}
+                                  className="text-xs text-red-400 hover:text-red-600"
+                                >
+                                  O'chirish
+                                </button>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className={lbl}>Seriya</label>
+                                <input
+                                  className={inp}
+                                  placeholder="AB"
+                                  maxLength={2}
+                                  value={d.passSeriya}
+                                  onChange={(e) =>
+                                    updateDriver(idx, 'passSeriya', e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
+                                  }
+                                />
+                              </div>
+                              <div>
+                                <label className={lbl}>Raqam</label>
+                                <input
+                                  className={inp}
+                                  placeholder="0000000"
+                                  maxLength={7}
+                                  inputMode="numeric"
+                                  value={d.passNumber}
+                                  onChange={(e) =>
+                                    updateDriver(idx, 'passNumber', e.target.value.replace(/\D/g, '').slice(0, 7))
+                                  }
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className={lbl}>Tug'ilgan sana</label>
+                              <input
+                                type="date"
+                                className={inp}
+                                value={d.birthDate}
+                                onChange={(e) => updateDriver(idx, 'birthDate', e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </>
                     )}
 
