@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Shield, Car, Plane, Home, Heart, ArrowRight, ChevronDown, Loader2, AlertCircle, X } from "lucide-react";
+import { Shield, Car, Plane, Home, Heart, ArrowRight, Loader2, AlertCircle, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import bgImage from "@/assets/home/home.png";
 import { osagoCalculate } from "@/service/apis/osago.api";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 type FieldType = "text" | "plate" | "select" | "date" | "number";
 
@@ -456,7 +457,7 @@ const HeroSection = () => {
 
             {/* Fields */}
             <div className="  px-5 mt-4 mb-5 space-y-3">
-              <div className="flex flex-col md:flex-row md:items-start gap-3 flex-wrap">
+              <div className="flex  flex-col md:flex-row md:items-center gap-3 flex-wrap">
                 {fields.map((field) => (
                   <div key={field.id} className="flex-1 min-w-[140px]">
                     <label className="block text-sm font-medium text-muted-foreground mb-1.5">{field.label}</label>
@@ -522,22 +523,14 @@ const HeroSection = () => {
                     )}
 
                     {field.type === "select" && (
-                      <div className="relative">
-                        <select
-                          className={`${inputBase} appearance-none pr-8 ${
-                            errors[field.id] ? "border-red-400 ring-2 ring-red-100" : "border-border"
-                          } ${!values[field.id] ? "text-muted-foreground" : "text-foreground"}`}
-                          value={values[field.id] ?? ""}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          onBlur={() => handleBlur(field)}
-                        >
-                          <option value="" disabled>{field.placeholder}</option>
-                          {field.options?.map((opt) => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                      </div>
+                      <CustomSelect
+                        value={values[field.id] ?? ""}
+                        onChange={(val) => handleChange(field.id, val)}
+                        onBlur={() => handleBlur(field)}
+                        placeholder={field.placeholder}
+                        options={field.options ?? []}
+                        error={errors[field.id]}
+                      />
                     )}
 
                     {errors[field.id] && (
@@ -546,11 +539,11 @@ const HeroSection = () => {
                   </div>
                 ))}
 
-                <div className="flex items-end flex-shrink-0 md:self-end">
+                <div className="flex items-center pt-6 flex-shrink-0 ">
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="flex items-center gap-2 px-7 py-[11px] bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary/90 active:scale-95 transition-all whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="flex  items-center gap-2 px-7 py-[11px] bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary/90 active:scale-95 transition-all whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
