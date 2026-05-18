@@ -64,6 +64,15 @@ export interface OsagoContractRequest {
   drivers: OsagoContractDriver[];
 }
 
+export const osagoPersonByDoc = async (body: {
+  passportSeries: string;
+  passportNumber: string;
+  birthDate: string;
+}): Promise<Record<string, any>> => {
+  const { data } = await api.post('/api/v1/osago/person/by-doc', body);
+  return data.data ?? data;
+};
+
 export const osagoSmsSend = async (phoneNumber: string): Promise<void> => {
   await api.post("/api/v1/osago/sms/send", { phoneNumber });
 };

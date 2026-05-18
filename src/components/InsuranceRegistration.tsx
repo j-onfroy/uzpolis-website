@@ -4,6 +4,7 @@ import {
   Shield,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   FileText,
   CheckCircle2,
   Car,
@@ -16,9 +17,58 @@ import {
   ArrowRight,
   MessageCircle,
 } from 'lucide-react';
-import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, type OsagoCalculateResponse } from '@/service/apis/osago.api';
+import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osagoPersonByDoc, type OsagoCalculateResponse } from '@/service/apis/osago.api';
 
 const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
+
+const PERSON_FIELD_LABELS: Record<string, string> = {
+  firstName: 'Ismi',
+  lastName: 'Familiyasi',
+  middleName: "Otasining ismi",
+  birthDate: "Tug'ilgan sana",
+  gender: 'Jinsi',
+  nationality: 'Millati',
+  citizenship: 'Fuqaroligi',
+  address: 'Manzil',
+  age: 'Yosh',
+  region: 'Viloyat',
+  district: 'Tuman',
+  document: 'Pasport',
+  documentSeries: 'Pasport seriyasi',
+  documentNumber: 'Pasport raqami',
+  documentType: 'Hujjat turi',
+  documentGivenDate: 'Berilgan sana',
+  documentExpireDate: 'Amal qilish muddati',
+  documentGivenBy: 'Beruvchi organ',
+  latinFullName: 'Lotin (to\'liq ismi)',
+  latinName: 'Lotin (to\'liq ismi)',
+  latinFirstName: 'Ism',
+  firstNameLatin: 'Ism',
+  latinLastName: 'Familiya',
+  lastNameLatin: 'Familiya',
+  latinMiddleName: 'Sharif',
+  middleNameLatin: 'Sharif',
+};
+
+const GENDER_MAP: Record<string, string> = {
+  M: 'Erkak', m: 'Erkak', MALE: 'Erkak', male: 'Erkak', '1': 'Erkak',
+  F: 'Ayol', f: 'Ayol', FEMALE: 'Ayol', female: 'Ayol', '2': 'Ayol',
+};
+
+const SKIP_FIELDS = new Set([
+  'fullName', 'pnfl', 'pinfl', 'inn', 'photo', 'image', 'avatar',
+  'regionId', 'districtId', 'isPassportExpired',
+  'startDate', 'endDate', 'issuedBy', 'birthCountry', 'birthPlace',
+]);
+
+function formatPersonValue(key: string, val: any): string {
+  if (key === 'gender') return GENDER_MAP[String(val)] ?? String(val);
+  return String(val ?? '—');
+}
+
+function labelFor(key: string): string {
+  return PERSON_FIELD_LABELS[key] ?? key;
+}
 
 const inp =
   'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400';
@@ -68,13 +118,39 @@ const InsuranceRegistration: React.FC = () => {
   const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerInn, setOwnerInn] = useState('');
   const [driverEntries, setDriverEntries] = useState([{ passSeriya: '', passNumber: '', birthDate: '' }]);
+  const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([null]);
+  const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
+  const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
 
-  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate', val: string) =>
+  const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate', val: string) => {
     setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
-  const addDriver = () =>
+    setDriverPersons((prev) => prev.map((p, i) => (i === idx ? null : p)));
+  };
+  const addDriver = () => {
     setDriverEntries((prev) => [...prev, { passSeriya: '', passNumber: '', birthDate: '' }]);
-  const removeDriver = (idx: number) =>
+    setDriverPersons((prev) => [...prev, null]);
+  };
+  const removeDriver = (idx: number) => {
     setDriverEntries((prev) => prev.filter((_, i) => i !== idx));
+    setDriverPersons((prev) => prev.filter((_, i) => i !== idx));
+    setExpandedDrivers((prev) => { const s = new Set(prev); s.delete(idx); return s; });
+  };
+  const handleVerifyPerson = async (idx: number) => {
+    const d = driverEntries[idx];
+    setDriverPersonLoading(idx);
+    try {
+      const person = await osagoPersonByDoc({
+        passportSeries: d.passSeriya,
+        passportNumber: d.passNumber,
+        birthDate: d.birthDate,
+      });
+      setDriverPersons((prev) => prev.map((p, i) => (i === idx ? person : p)));
+    } catch {
+      setDriverPersons((prev) => prev.map((p, i) => (i === idx ? null : p)));
+    } finally {
+      setDriverPersonLoading(null);
+    }
+  };
   const [contractLoading, setContractLoading] = useState(false);
   const [contractError, setContractError] = useState<string | null>(null);
 
@@ -124,7 +200,7 @@ const InsuranceRegistration: React.FC = () => {
     techNumber.length === 7;
 
   const isLimited = calcResult?.limited ?? false;
-  const isJuridic = !calcResult?.individual ;
+  const isJuridic = !calcResult?.individual;
 
   const canSubmitContract =
     phoneNumber.replace(/\D/g, '').length === 12 &&
@@ -331,8 +407,8 @@ const InsuranceRegistration: React.FC = () => {
                           key={id}
                           onClick={() => setPeriodId(id)}
                           className={`flex-1 py-2.5 text-xs font-semibold rounded-xl border transition-all ${periodId === id
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
+                            ? 'border-blue-500 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 text-gray-600 hover:border-gray-300 bg-white'
                             }`}
                         >
                           {PERIOD_LABELS[id]}
@@ -579,17 +655,17 @@ const InsuranceRegistration: React.FC = () => {
                         {driverEntries.map((d, idx) => (
                           <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
+                                {driverPersons[idx] && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                              </div>
                               {driverEntries.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => removeDriver(idx)}
-                                  className="text-xs text-red-400 hover:text-red-600"
-                                >
+                                <button type="button" onClick={() => removeDriver(idx)} className="text-xs text-red-400 hover:text-red-600">
                                   O'chirish
                                 </button>
                               )}
                             </div>
+
                             <div className="grid grid-cols-2 gap-3">
                               <div>
                                 <label className={lbl}>Seriya</label>
@@ -598,9 +674,7 @@ const InsuranceRegistration: React.FC = () => {
                                   placeholder="AB"
                                   maxLength={2}
                                   value={d.passSeriya}
-                                  onChange={(e) =>
-                                    updateDriver(idx, 'passSeriya', e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))
-                                  }
+                                  onChange={(e) => updateDriver(idx, 'passSeriya', e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2))}
                                 />
                               </div>
                               <div>
@@ -611,12 +685,11 @@ const InsuranceRegistration: React.FC = () => {
                                   maxLength={7}
                                   inputMode="numeric"
                                   value={d.passNumber}
-                                  onChange={(e) =>
-                                    updateDriver(idx, 'passNumber', e.target.value.replace(/\D/g, '').slice(0, 7))
-                                  }
+                                  onChange={(e) => updateDriver(idx, 'passNumber', e.target.value.replace(/\D/g, '').slice(0, 7))}
                                 />
                               </div>
                             </div>
+
                             <div>
                               <label className={lbl}>Tug'ilgan sana</label>
                               <input
@@ -626,6 +699,24 @@ const InsuranceRegistration: React.FC = () => {
                                 onChange={(e) => updateDriver(idx, 'birthDate', e.target.value)}
                               />
                             </div>
+
+                            {d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate && !driverPersons[idx] && (
+                              <button
+                                type="button"
+                                onClick={() => handleVerifyPerson(idx)}
+                                disabled={driverPersonLoading === idx}
+                                className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 disabled:opacity-60 transition"
+                              >
+                                {driverPersonLoading === idx ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Qo\'shish'}
+                              </button>
+                            )}
+
+                            {driverPersons[idx] && (
+                              <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                                <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                <span className="text-xs font-semibold text-green-700 truncate">{driverPersons[idx]?.fullName}</span>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </>
@@ -684,8 +775,8 @@ const InsuranceRegistration: React.FC = () => {
                 ))}
               </div>
 
-              <div className="px-5 pt-3 pb-4">
-                <div className="flex items-center justify-between  border-gray-100 pt-3">
+              <div className="px-5 pt-3 pb-4 border-b border-gray-100">
+                <div className="flex items-center justify-between pt-3">
                   <span className="text-sm font-semibold text-gray-800">Jami to'lov</span>
                   <div className="text-right">
                     {calcResult ? (
@@ -701,6 +792,54 @@ const InsuranceRegistration: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Verified drivers */}
+              {isLimited && driverPersons.some((p) => p !== null) && (
+                <div className="px-5 py-4 space-y-2">
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Tasdiqlangan haydovchilar ({driverPersons.length})</p>
+                  {driverPersons.map((person, idx) =>
+                    person ? (
+                      <div key={idx} className="bg-gray-50 rounded-xl overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedDrivers((prev) => {
+                              const s = new Set(prev);
+                              s.has(idx) ? s.delete(idx) : s.add(idx);
+                              return s;
+                            })
+                          }
+                          className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-gray-100 transition-colors"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            <span className="text-xs font-semibold text-gray-800 truncate">{person.fullName}</span>
+                          </div>
+                          <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${expandedDrivers.has(idx) ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {expandedDrivers.has(idx) && (
+                          <div className="px-3 pb-3 pt-1 border-t border-gray-200 space-y-1.5">
+                            {Object.entries(person)
+                              .filter(([k]) => !SKIP_FIELDS.has(k))
+                              .map(([key, val]) => {
+                                if (key === 'genderLabel') {
+                                  return null
+                                }
+                                return (
+                                  <div key={key} className="flex items-start justify-between gap-2">
+                                    <span className="text-[10px] text-gray-400 shrink-0">{labelFor(key)}</span>
+                                    <span className="text-[10px] font-medium text-gray-700 text-right">{formatPersonValue(key, val)}</span>
+                                  </div>
+                                )
+                              })}
+                          </div>
+                        )}
+                      </div>
+                    ) : null
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
