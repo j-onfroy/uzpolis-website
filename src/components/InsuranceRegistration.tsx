@@ -16,6 +16,9 @@ import {
   Loader2,
   ArrowRight,
   MessageCircle,
+  Trash2,
+  X,
+  Edit,
 } from 'lucide-react';
 import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osagoPersonByDoc, type OsagoCalculateResponse } from '@/service/apis/osago.api';
 import { CustomSelect } from '@/components/ui/CustomSelect';
@@ -472,25 +475,16 @@ const InsuranceRegistration: React.FC = () => {
                     )}
                   </div> */}
 
-                  {/* Limited toggle */}
-                  <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">Haydovchilar cheklovi</p>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {limited
-                          ? "Cheklangan — 5 kishigacha haydovchi qo'shish mumkin "
-                          : 'Cheklanmagan — istalgan haydovchi'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setLimited((p) => !p)}
-                      className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-3 ${limited ? 'bg-blue-600' : 'bg-gray-200'}`}
-                    >
-                      <span
-                        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${limited ? 'left-6' : 'left-1'}`}
-                      />
-                    </button>
-                  </div>
+                  {/* Limited select */}
+                  <CustomSelect
+                    label="Haydovchilar cheklovi"
+                    value={limited ? 'limited' : 'unlimited'}
+                    onChange={(val) => setLimited(val === 'limited')}
+                    options={[
+                      { value: 'unlimited', label: "Cheklanmagan — istalgan haydovchi" },
+                      { value: 'limited', label: "Cheklangan — 5 kishigacha haydovchi" },
+                    ]}
+                  />
 
                   {calcError && (
                     <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
@@ -546,9 +540,9 @@ const InsuranceRegistration: React.FC = () => {
                     </div>
                     <button
                       onClick={() => { setPhase('calculate'); setCalcResult(null); }}
-                      className="text-xs text-blue-600 font-medium hover:underline"
+                      className="text-xs flex items-center gap-1 text-blue-600 font-medium hover:underline"
                     >
-                      O'zgartirish
+                     <Edit size={11}/> <span> O'zgartirish</span>
                     </button>
                   </div>
                   <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -659,7 +653,7 @@ const InsuranceRegistration: React.FC = () => {
                               </div>
                               {(!isLimited || driverEntries.length > 1) && (
                                 <button type="button" onClick={() => removeDriver(idx)} className="text-xs text-red-400 hover:text-red-600">
-                                  O'chirish
+                                 <X />
                                 </button>
                               )}
                             </div>
@@ -714,7 +708,7 @@ const InsuranceRegistration: React.FC = () => {
                                     { value: '6', label: 'Qizi' },
                                     { value: '7', label: 'Akasi' },
                                     { value: '8', label: 'Ukasi' },
-                                    { value: '9', label: 'Opachasi' },
+                                    { value: '9', label: 'Opasi' },
                                     { value: '10', label: 'Singlisi' },
                                   ]}
                                 />

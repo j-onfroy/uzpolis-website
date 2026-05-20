@@ -176,9 +176,11 @@
 // };
 
 // export default Header;
-import { useState } from 'react'
-import { ChevronDown, Phone, Menu, X, Share2, PlayCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { ChevronDown, Share2, PlayCircle, UserCircle2 } from 'lucide-react'
 import logo from "@/assets/logo.png";
+
 const products = [
   { label: 'OSAGO', href: '#' },
   { label: 'KASKO', href: '#' },
@@ -197,9 +199,28 @@ const navLinks = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const location = useLocation()
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('token')
+    return token ? JSON.parse(localStorage.getItem('user') || '{}') : null
+  })
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setUser(token ? JSON.parse(localStorage.getItem('user') || '{}') : null)
+  }, [location.pathname])
+
+  useEffect(() => {
+    const onStorage = () => {
+      const token = localStorage.getItem('token')
+      setUser(token ? JSON.parse(localStorage.getItem('user') || '{}') : null)
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
 
   return (
-    <header className="bg-white text-black sticky top-0 z-50">
+    <header className="bg-white/70 backdrop-blur-xl border-b border-gray-200/60 shadow-[0_2px_24px_0_rgba(31,79,217,0.06)] text-black sticky top-0 z-50">
       <div className="max-w-[1216px] mx-auto px-4 h-16 flex items-center justify-between gap-6">
         {/* Logo */}
         <a href="/" className=" flex md:hidden items-center gap-2 shrink-0">
@@ -259,18 +280,29 @@ export default function Header() {
           <a href="#" className="bg-white/10 hover:bg-white/20 rounded-lg w-8 h-8 flex items-center justify-center transition-colors">
             <PlayCircle size={16} />
           </a>
-          <a href="/user/login" className="bg-[#1f4fd9] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-            Kirish
-          </a>
+          {user ? (
+            <a href="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+              <UserCircle2 size={22} className="text-[#1f4fd9]" />
+              <span className="text-sm font-medium text-gray-800">{user.phoneNumber}</span>
+            </a>
+          ) : (
+            <a href="/user/login" className="bg-[#1f4fd9] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+              Kirish
+            </a>
+          )}
         </div>
 
-        {/* Mobile menu btn */}
-        {/* <button className="md:hidden text-black" onClick={() => setMobileOpen(!mobileOpen)}> */}
-        {/* {mobileOpen ? <X size={22} /> : <Menu size={22} />} */}
-        <a href="/user/login" className="bg-[#1f4fd9] md:hidden text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-          Kirish
-        </a>
-        {/* </button> */}
+        {/* Mobile right */}
+        {user ? (
+          <a href="/profile" className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200">
+            <UserCircle2 size={20} className="text-[#1f4fd9]" />
+            <span className="text-xs font-medium text-gray-800 max-w-[100px] truncate">{user.phoneNumber}</span>
+          </a>
+        ) : (
+          <a href="/user/login" className="bg-[#1f4fd9] md:hidden text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            Kirish
+          </a>
+        )}
       </div>
 
       {/* Mobile Menu */}
