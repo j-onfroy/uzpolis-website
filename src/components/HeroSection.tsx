@@ -10,37 +10,49 @@ type FieldType = "text" | "plate" | "select" | "date" | "number";
 
 // ── Formatters ──────────────────────────────────────────────────────────────
 
-/** A 123 BC — 1 harf, 3 raqam, 2 harf  |  641 BNA — 3 raqam, 3 harf */
+/** 01 A 123 BC — 2 raqam prefix, 1 harf, 3 raqam, 2 harf
+ *  01 641 BNA  — 2 raqam prefix, 3 raqam, 3 harf */
 function formatPlate(input: string): string {
   const raw = input.replace(/\s/g, "").toUpperCase();
   if (!raw) return "";
-  if (/^\d/.test(raw)) {
-    // Format: 3 digits + 3 letters (e.g., 641 BNA)
-    const chars: string[] = [];
-    let dc = 0, lc = 0;
-    for (const ch of raw) {
-      if (dc < 3 && /\d/.test(ch)) { chars.push(ch); dc++; }
-      else if (dc === 3 && lc < 3 && /[A-Z]/.test(ch)) { chars.push(ch); lc++; }
-      if (lc >= 3) break;
+
+  // Collect up to 2 prefix digits
+  let pi = 0;
+  while (pi < raw.length && pi < 2 && /\d/.test(raw[pi])) pi++;
+  const prefix = raw.slice(0, pi);
+  const rest = raw.slice(pi);
+
+  if (!prefix) return "";
+  if (!rest) return prefix;
+
+  if (/[A-Z]/.test(rest[0])) {
+    // A 123 BC format
+    const ch: string[] = [];
+    let pos = 0;
+    for (const c of rest) {
+      if (pos === 0 && /[A-Z]/.test(c)) { ch.push(c); pos++; }
+      else if (pos >= 1 && pos <= 3 && /\d/.test(c)) { ch.push(c); pos++; }
+      else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(c)) { ch.push(c); pos++; }
+      if (pos > 5) break;
     }
-    if (!chars.length) return "";
-    let out = chars.slice(0, 3).join("");
-    if (chars.length > 3) out += " " + chars.slice(3).join("");
+    if (!ch.length) return prefix;
+    let out = prefix + " " + ch[0];
+    if (ch.length >= 2) out += " " + ch.slice(1, Math.min(4, ch.length)).join("");
+    if (ch.length >= 5) out += " " + ch.slice(4).join("");
     return out;
   }
-  // Format: 1 letter + 3 digits + 2 letters (e.g., A 123 BC)
-  const chars: string[] = [];
-  let pos = 0;
-  for (const ch of raw) {
-    if (pos === 0 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
-    else if (pos >= 1 && pos <= 3 && /\d/.test(ch)) { chars.push(ch); pos++; }
-    else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
-    if (pos > 5) break;
+
+  // 641 BNA format
+  const ch: string[] = [];
+  let dc = 0, lc = 0;
+  for (const c of rest) {
+    if (dc < 3 && /\d/.test(c)) { ch.push(c); dc++; }
+    else if (dc === 3 && lc < 3 && /[A-Z]/.test(c)) { ch.push(c); lc++; }
+    if (lc >= 3) break;
   }
-  if (!chars.length) return "";
-  let out = chars[0];
-  if (chars.length >= 2) out += " " + chars.slice(1, Math.min(4, chars.length)).join("");
-  if (chars.length >= 5) out += " " + chars.slice(4).join("");
+  if (!ch.length) return prefix;
+  let out = prefix + " " + ch.slice(0, 3).join("");
+  if (ch.length > 3) out += " " + ch.slice(3).join("");
   return out;
 }
 
@@ -107,9 +119,9 @@ const FIELDS: Record<string, FieldDef[]> = {
       id: "plate",
       label: "Davlat raqami",
       type: "plate",
-      placeholder: "A 123 BC ",
-      regex: /^([A-Za-z]\s?\d{3}\s?[A-Za-z]{2}|\d{3}\s?[A-Za-z]{3})$/,
-      errorMsg: "Format: A 123 BC yoki 641 BNA",
+      placeholder: "01 A 123 BC",
+      regex: /^\d{2}\s([A-Za-z]\s\d{3}\s[A-Za-z]{2}|\d{3}\s[A-Za-z]{3})$/,
+      errorMsg: "Format: 01 A 123 BC yoki 01 641 BNA",
     },
     {
       id: "techSeries",
@@ -154,9 +166,9 @@ const FIELDS: Record<string, FieldDef[]> = {
       id: "plate",
       label: "Davlat raqami",
       type: "plate",
-      placeholder: "A 123 BC",
-      regex: /^[A-Za-z]\s?\d{3}\s?[A-Za-z]{2}$/,
-      errorMsg: "Format: A 123 BC",
+      placeholder: "01 A 123 BC",
+      regex: /^\d{2}\s[A-Za-z]\s\d{3}\s[A-Za-z]{2}$/,
+      errorMsg: "Format: 01 A 123 BC",
     },
     {
       id: "techSeries",
@@ -306,7 +318,6 @@ const HeroSection = () => {
     try { return JSON.parse(localStorage.getItem("hero_form_values") ?? "{}"); } catch { return {}; }
   });
   const [errors, setErrors]   = useState<Record<string, string>>({});
-  const [region, setRegion]   = useState(() => localStorage.getItem("hero_form_region") ?? "01");
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -342,12 +353,6 @@ const HeroSection = () => {
     if (errors[id]) setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
-  const handleRegionChange = (val: string) => {
-    const v = val.replace(/\D/g, "").slice(0, 2);
-    setRegion(v);
-    localStorage.setItem("hero_form_region", v);
-  };
-
   const handleSubmit = async () => {
     const newErrors: Record<string, string> = {};
     fields.forEach((f) => {
@@ -366,7 +371,7 @@ const HeroSection = () => {
         const result   = await osagoCalculate({
           limited,
           drivers: [],
-          gosNumber: `${region}${plateRaw}`,
+          gosNumber: plateRaw,
           techSery:  values["techSeries"] ?? "",
           techNumber: values["techNumber"] ?? "",
           periodId:  Number(values["period"] ?? "1"),
@@ -380,7 +385,6 @@ const HeroSection = () => {
               techNumber: values["techNumber"] ?? "",
               periodId:   Number(values["period"] ?? "1"),
               limited,
-              region,
             },
           },
         });
@@ -463,29 +467,14 @@ const HeroSection = () => {
                     <label className="block text-sm font-medium text-muted-foreground mb-1.5">{field.label}</label>
 
                     {field.type === "plate" && (
-                      <div className={`flex items-stretch border rounded-xl overflow-hidden transition-colors ${
-                        errors[field.id]
-                          ? "border-red-400 ring-2 ring-red-100"
-                          : "border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
-                      }`}>
-                        <div className="flex flex-col items-center justify-center px-2.5 bg-muted border-r border-border min-w-[44px] gap-0.5">
-                          <input
-                            className="w-8 text-sm font-bold text-center bg-transparent outline-none leading-none"
-                            value={region}
-                            maxLength={2}
-                            onChange={(e) => handleRegionChange(e.target.value)}
-                          />
-                          <span className="text-[9px] text-muted-foreground leading-none">UZ</span>
-                        </div>
-                        <input
-                          className="flex-1 px-3 py-3 text-base outline-none bg-transparent placeholder:text-muted-foreground"
-                          placeholder={field.placeholder}
-                          value={values[field.id] ?? ""}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          onBlur={() => handleBlur(field)}
-                          maxLength={8}
-                        />
-                      </div>
+                      <input
+                        className={`${inputBase} ${errors[field.id] ? "border-red-400 ring-2 ring-red-100" : "border-border"}`}
+                        placeholder={field.placeholder}
+                        value={values[field.id] ?? ""}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        onBlur={() => handleBlur(field)}
+                        maxLength={11}
+                      />
                     )}
 
                     {field.type === "text" && (

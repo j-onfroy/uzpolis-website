@@ -173,39 +173,49 @@ const InsuranceRegistration: React.FC = () => {
   const handleGosNumber = (val: string) => {
     const raw = val.replace(/\s/g, '').toUpperCase();
     if (!raw) { setGosNumber(''); return; }
-    if (/^\d/.test(raw)) {
-      // Format: 3 digits + 3 letters (e.g., 641BNA)
-      const chars: string[] = [];
-      let dc = 0, lc = 0;
-      for (const ch of raw) {
-        if (dc < 3 && /\d/.test(ch)) { chars.push(ch); dc++; }
-        else if (dc === 3 && lc < 3 && /[A-Z]/.test(ch)) { chars.push(ch); lc++; }
-        if (lc >= 3) break;
-      }
-      if (!chars.length) { setGosNumber(''); return; }
-      let out = chars.slice(0, 3).join('');
-      if (chars.length > 3) out += ' ' + chars.slice(3).join('');
-      setGosNumber(out);
-    } else {
-      // Format: 1 letter + 3 digits + 2 letters (e.g., A123AB)
-      const chars: string[] = [];
+
+    // Collect up to 2 prefix digits
+    let pi = 0;
+    while (pi < raw.length && pi < 2 && /\d/.test(raw[pi])) pi++;
+    const prefix = raw.slice(0, pi);
+    const rest = raw.slice(pi);
+
+    if (!prefix) { setGosNumber(''); return; }
+    if (!rest) { setGosNumber(prefix); return; }
+
+    if (/[A-Z]/.test(rest[0])) {
+      // A 123 BC format
+      const ch: string[] = [];
       let pos = 0;
-      for (const ch of raw) {
-        if (pos === 0 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
-        else if (pos >= 1 && pos <= 3 && /\d/.test(ch)) { chars.push(ch); pos++; }
-        else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(ch)) { chars.push(ch); pos++; }
+      for (const c of rest) {
+        if (pos === 0 && /[A-Z]/.test(c)) { ch.push(c); pos++; }
+        else if (pos >= 1 && pos <= 3 && /\d/.test(c)) { ch.push(c); pos++; }
+        else if (pos >= 4 && pos <= 5 && /[A-Z]/.test(c)) { ch.push(c); pos++; }
         if (pos > 5) break;
       }
-      if (!chars.length) { setGosNumber(''); return; }
-      let out = chars[0];
-      if (chars.length >= 2) out += ' ' + chars.slice(1, Math.min(4, chars.length)).join('');
-      if (chars.length >= 5) out += ' ' + chars.slice(4).join('');
+      if (!ch.length) { setGosNumber(prefix); return; }
+      let out = prefix + ' ' + ch[0];
+      if (ch.length >= 2) out += ' ' + ch.slice(1, Math.min(4, ch.length)).join('');
+      if (ch.length >= 5) out += ' ' + ch.slice(4).join('');
+      setGosNumber(out);
+    } else {
+      // 641 BNA format
+      const ch: string[] = [];
+      let dc = 0, lc = 0;
+      for (const c of rest) {
+        if (dc < 3 && /\d/.test(c)) { ch.push(c); dc++; }
+        else if (dc === 3 && lc < 3 && /[A-Z]/.test(c)) { ch.push(c); lc++; }
+        if (lc >= 3) break;
+      }
+      if (!ch.length) { setGosNumber(prefix); return; }
+      let out = prefix + ' ' + ch.slice(0, 3).join('');
+      if (ch.length > 3) out += ' ' + ch.slice(3).join('');
       setGosNumber(out);
     }
   };
 
   const canCalculate =
-    gosNumber.replace(/\s/g, '').length === 6 &&
+    gosNumber.replace(/\s/g, '').length === 8 &&
     techSery.length >= 2 &&
     techNumber.length === 7;
 
@@ -223,7 +233,7 @@ const InsuranceRegistration: React.FC = () => {
     setCalcError(null);
     try {
       const result = await osagoCalculate({
-        gosNumber: '01' + gosNumber.replace(/\s/g, ''),
+        gosNumber: gosNumber.replace(/\s/g, ''),
         techSery,
         techNumber,
         periodId,
@@ -366,19 +376,13 @@ const InsuranceRegistration: React.FC = () => {
                   {/* Plate */}
                   <div>
                     <label className={lbl}>Davlat raqami *</label>
-                    <div className={`flex items-stretch border rounded-xl overflow-hidden transition-colors focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10 border-gray-200 bg-white`}>
-                      <div className="flex flex-col items-center justify-center px-3 bg-gray-50 border-r border-gray-200 flex-shrink-0">
-                        <span className="text-xs font-bold text-gray-700 leading-none">01</span>
-                        <span className="text-[9px] text-gray-400 leading-none mt-0.5">UZ</span>
-                      </div>
-                      <input
-                        className="flex-1 px-3 py-2.5 text-sm outline-none bg-white placeholder:text-gray-400"
-                        placeholder="A 123 BC"
-                        value={gosNumber}
-                        onChange={(e) => handleGosNumber(e.target.value)}
-                        maxLength={8}
-                      />
-                    </div>
+                    <input
+                      className={inp}
+                      placeholder="01 A 123 BC"
+                      value={gosNumber}
+                      onChange={(e) => handleGosNumber(e.target.value)}
+                      maxLength={11}
+                    />
                   </div>
 
                   {/* Tech passport */}
