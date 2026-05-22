@@ -98,7 +98,7 @@ const InfoCard = ({
       <Icon className="w-4 h-4 text-blue-600" />
     </div>
     <div>
-      <p className="text-[11px] text-gray-400 leading-none mb-1">{label}</p>
+      <p className="text-[14px] text-gray-400 leading-none mb-1">{label}</p>
       <p className="text-sm font-semibold text-gray-900">{value || '—'}</p>
     </div>
   </div>
@@ -331,9 +331,6 @@ const InsuranceRegistration: React.FC = () => {
             ))}
           </div>
           <h1 className="text-2xl font-bold text-gray-900">OSAGO sug'urtasi</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Avtomobil ma'lumotlarini kiriting — narxni hisoblang va polis rasmiylashtiring.
-          </p>
         </div>
       </div>
 
@@ -352,7 +349,7 @@ const InsuranceRegistration: React.FC = () => {
                     <p className={`text-xs font-semibold truncate leading-tight ${step.active ? 'text-blue-600' : 'text-gray-400'}`}>
                       {step.label}
                     </p>
-                    <p className="text-[10px] text-gray-400 truncate leading-tight mt-0.5">{step.sub}</p>
+                    <p className="text-[14px] text-gray-400 truncate leading-tight mt-0.5">{step.sub}</p>
                   </div>
                 </div>
                 {idx < steps.length - 1 && <div className="h-px w-6 bg-gray-200 mx-1 flex-shrink-0" />}
@@ -780,11 +777,11 @@ const InsuranceRegistration: React.FC = () => {
           <div className="lg:w-72 xl:w-80 flex-shrink-0">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden sticky top-5">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
+                {/* <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
                   <Shield className="w-5 h-5 text-white" />
-                </div>
+                </div> */}
                 <div>
-                  <p className="text-[10px] text-gray-400 leading-none mb-1">OSAGO</p>
+                  <p className="text-[14px] text-gray-400 leading-none mb-1">OSAGO</p>
                   <p className="text-sm font-bold text-gray-900 leading-tight">Majburiy sug'urta</p>
                 </div>
               </div>
@@ -845,7 +842,7 @@ const InsuranceRegistration: React.FC = () => {
                             <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
                             <span className="text-xs font-semibold text-gray-800 truncate">{person.fullName}</span>
                             {driverEntries[idx]?.relative && (
-                              <span className="text-[10px] text-gray-400 bg-gray-100 rounded px-1.5 py-0.5 flex-shrink-0">
+                              <span className="text-[14px] text-gray-400 bg-gray-100 rounded px-1.5 py-0.5 flex-shrink-0">
                                 {RELATIVE_LABELS[driverEntries[idx].relative] ?? driverEntries[idx].relative}
                               </span>
                             )}
@@ -863,8 +860,8 @@ const InsuranceRegistration: React.FC = () => {
                                 }
                                 return (
                                   <div key={key} className="flex items-start justify-between gap-2">
-                                    <span className="text-[10px] text-gray-400 shrink-0">{labelFor(key)}</span>
-                                    <span className="text-[10px] font-medium text-gray-700 text-right">{formatPersonValue(key, val)}</span>
+                                    <span className="text-[14px] text-gray-400 shrink-0">{labelFor(key)}</span>
+                                    <span className="text-[14px] font-medium text-gray-700 text-right">{formatPersonValue(key, val)}</span>
                                   </div>
                                 )
                               })}

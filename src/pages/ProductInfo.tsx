@@ -339,7 +339,7 @@ export const ProductInfo = () => {
                 </button>
 
                 {/* FOOTER NOTE */}
-                <p className="text-[11px] text-gray-400 text-center">
+                <p className="text-[14px] text-gray-400 text-center">
                     Sug'urta muddati davomida hodisa yuz bersa, 40 mln so'mgacha to'lov amalga oshiriladi.
                 </p>
 

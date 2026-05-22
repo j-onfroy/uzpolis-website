@@ -14,7 +14,7 @@ const Footer = () => {
               </div>
               <div>
                 <p className="text-base font-bold leading-none">UZPOLIS</p>
-                <p className="text-[10px] text-primary-foreground/50 leading-none mt-0.5">
+                <p className="text-[14px] text-primary-foreground/50 leading-none mt-0.5">
                   Sug'urta agent marketplace
                 </p>
               </div>

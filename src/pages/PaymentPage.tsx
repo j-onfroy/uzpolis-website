@@ -191,7 +191,7 @@ const PaymentPage = () => {
                 </div>
                 <div className="text-right">
                   <span className="text-sm font-semibold text-gray-800">{formatDate(contract.startDate)}</span>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{contract.startDate}</p>
+                  <p className="text-[14px] text-gray-400 mt-0.5">{contract.startDate}</p>
                 </div>
               </div>
 
@@ -205,7 +205,7 @@ const PaymentPage = () => {
                   <span className="text-sm font-semibold text-gray-800">
                     {calculateEndDate(contract.startDate, contract.periodId)}
                   </span>
-                  <p className="text-[10px] text-gray-400 mt-0.5">
+                  <p className="text-[14px] text-gray-400 mt-0.5">
                     {PERIOD_LABELS[contract.periodId]} muddat
                   </p>
                 </div>
@@ -239,7 +239,7 @@ const PaymentPage = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-gray-800">Jami to'lov</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">QQS bilan birga</p>
+                    <p className="text-[14px] text-gray-400 mt-0.5">QQS bilan birga</p>
                   </div>
                   <div className="text-right">
                     <span className="text-2xl font-extrabold text-blue-600">
@@ -273,7 +273,6 @@ const PaymentPage = () => {
                 </div>
                 <p className="text-sm font-bold text-gray-800">To'lov usulini tanlang</p>
               </div>
-              <p className="text-xs text-gray-400 mt-1 ml-8">Tugmani bosing — to'lov sahifasiga o'tasiz</p>
             </div>
             <div className="p-4 space-y-3">
               {/* Payme */}

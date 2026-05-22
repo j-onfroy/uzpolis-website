@@ -28,7 +28,9 @@ export const ProductCard = ({ item }: { item: Product }) => {
 
   return (
     <div
-      onClick={() => nav("/product/" + item.id)}
+      // onClick={() => nav("/product/" + item.id)}
+      onClick={() => nav("/register")}
+
       className="bg-white rounded-2xl p-5 shadow-sm border-2 border-gray-100 hover:shadow-md transition cursor-pointer flex flex-col"
     >
       {/* Header */}
