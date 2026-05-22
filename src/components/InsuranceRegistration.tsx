@@ -516,7 +516,7 @@ const InsuranceRegistration: React.FC = () => {
                 <div className="bg-blue-600 rounded-2xl px-6 py-5 flex items-center justify-between text-white">
                   <div>
                     <p className="text-sm text-blue-200 mb-1">To'lov miqdori</p>
-                    <p className="text-3xl font-extrabold">
+                    <p className="text-[30px] font-extrabold">
                       {Number(calcResult.amountUzs).toLocaleString('uz-UZ')}
                       <span className="text-base font-normal text-blue-200 ml-1">so'm</span>
                     </p>
