@@ -344,6 +344,7 @@ const HeroSection = () => {
   };
 
   const handleChange = (id: string, raw: string) => {
+    console.log(id,"id is come")
     const formatted = FORMATTERS[id] ? FORMATTERS[id](raw) : raw;
     setAllValues((prev) => {
       const next = { ...prev, [activeTab]: { ...(prev[activeTab] ?? {}), [id]: formatted } };
@@ -452,7 +453,7 @@ const HeroSection = () => {
                     </div>
                     <div className="text-left">
                       <div className={`text-sm font-semibold leading-tight ${active ? "text-primary" : ""}`}>{tab.label}</div>
-                      <div className="text-[10px] opacity-55 leading-tight mt-0.5">{tab.sub}</div>
+                      <div className="text-[14px] opacity-55 leading-tight mt-0.5">{tab.sub}</div>
                     </div>
                   </button>
                 );
@@ -515,7 +516,7 @@ const HeroSection = () => {
                       <CustomSelect
                         value={values[field.id] ?? ""}
                         onChange={(val) => handleChange(field.id, val)}
-                        onBlur={() => handleBlur(field)}
+                        // onBlur={() => handleBlur(field)}
                         placeholder={field.placeholder}
                         options={field.options ?? []}
                         error={errors[field.id]}
@@ -523,7 +524,7 @@ const HeroSection = () => {
                     )}
 
                     {errors[field.id] && (
-                      <p className="text-[11px] text-red-500 mt-1">{errors[field.id]}</p>
+                      <p className="text-[14px] text-red-500 mt-1">{errors[field.id]}</p>
                     )}
                   </div>
                 ))}

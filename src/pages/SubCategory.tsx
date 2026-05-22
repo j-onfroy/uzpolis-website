@@ -156,7 +156,7 @@ export default function SubCategory() {
                         </h3>
                         {item.badge && (
                           <span
-                            className={`text-[11px] font-bold px-2.5 py-1 rounded-full mt-1.5 inline-block ${getBadgeStyle(item.badge)}`}
+                            className={`text-[14px] font-bold px-2.5 py-1 rounded-full mt-1.5 inline-block ${getBadgeStyle(item.badge)}`}
                           >
                             {item.badge}
                           </span>

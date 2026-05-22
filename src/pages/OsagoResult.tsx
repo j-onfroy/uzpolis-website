@@ -25,7 +25,7 @@ const InfoCard = ({
       <Icon className="w-4 h-4 text-blue-600" />
     </div>
     <div>
-      <p className="text-[11px] text-gray-400 leading-none mb-1">{label}</p>
+      <p className="text-[14px] text-gray-400 leading-none mb-1">{label}</p>
       <p className="text-sm font-semibold text-gray-900">{value || "—"}</p>
     </div>
   </div>

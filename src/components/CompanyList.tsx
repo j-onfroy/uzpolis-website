@@ -133,7 +133,7 @@ function DiscountRing({ value }: { value: number }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-[#1f4fd9]">
+      <span className="absolute inset-0 flex items-center justify-center text-[14px] font-bold text-[#1f4fd9]">
         {value}%
       </span>
     </div>
@@ -179,7 +179,7 @@ const CompanyList = () => {
         <div className="bg-[#f5f6fb] rounded-2xl p-5 space-y-5">
           {/* Sort */}
           <div>
-            <p className="text-[10px] font-semibold text-muted-foreground tracking-widest uppercase mb-3">
+            <p className="text-[14px] font-semibold text-muted-foreground tracking-widest uppercase mb-3">
               SARALASH
             </p>
             <div className="space-y-1">
@@ -200,7 +200,7 @@ const CompanyList = () => {
 
           {/* Coverage range */}
           <div>
-            <p className="text-[10px] font-semibold text-muted-foreground tracking-widest uppercase mb-3">
+            <p className="text-[14px] font-semibold text-muted-foreground tracking-widest uppercase mb-3">
                SUMMASI
             </p>
             <SliderPrimitive.Root

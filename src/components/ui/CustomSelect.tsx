@@ -138,7 +138,7 @@ export function CustomSelect({
     if (optionGroups) {
       return optionGroups.map((group, idx) => (
         <div key={idx}>
-          <div className="px-4 py-2 text-[11px] font-bold text-blue-600 uppercase tracking-wide bg-gray-50 border-b border-gray-100 sticky top-0">
+          <div className="px-4 py-2 text-[14px] font-bold text-blue-600 uppercase tracking-wide bg-gray-50 border-b border-gray-100 sticky top-0">
             {group.label}
           </div>
           {group.options.map((o) => (
@@ -228,11 +228,11 @@ export function CustomSelect({
       {/* Portal dropdown */}
       {createPortal(dropdown, document.body)}
 
-      {error && (
-        <p className="mt-1 text-[11px] text-red-500 flex items-center gap-1">
+      {/* {error && (
+        <p className="mt-1 text-[14px] text-red-500 flex items-center gap-1">
           <span>⚠</span> {error}
         </p>
-      )}
+      )} */}
     </div>
   );
 }
