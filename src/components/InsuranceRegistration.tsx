@@ -82,7 +82,7 @@ function labelFor(key: string): string {
 
 const inp =
   'w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400';
-const lbl = 'block text-xs font-medium text-gray-500 mb-1.5';
+const lbl = 'block text-sm font-medium text-gray-500 mb-1.5';
 
 const InfoCard = ({
   icon: Icon,
@@ -319,7 +319,7 @@ const InsuranceRegistration: React.FC = () => {
     <div className="min-h-screen bg-[#f5f7fb] pb-20">
       {/* Page header */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-4">
+        <div className="max-w-6xl mx-auto px-0 sm:px-6 lg:px-8 pt-5 pb-4">
           <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
             {['Bosh sahifa', 'OSAGO', 'Rasmiylashtrish'].map((crumb, i, arr) => (
               <React.Fragment key={crumb}>
@@ -334,7 +334,7 @@ const InsuranceRegistration: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div className="max-w-6xl mx-auto px-1 sm:px-6 lg:px-8 py-5">
         {/* Step indicator */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-3.5 mb-5">
           <div className="flex items-center">
@@ -683,7 +683,7 @@ const InsuranceRegistration: React.FC = () => {
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="black md:grid grid-cols-2 gap-3">
                               <div>
                                 <label className={lbl}>Tug'ilgan sana</label>
                                 <input
