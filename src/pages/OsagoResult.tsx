@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { osagoCreateContract, type OsagoCalculateResponse, type OsagoContractResponse } from "@/service/apis/osago.api";
 
-const PERIOD_LABELS: Record<number, string> = { 1: "3 oy", 2: "12 oy" };
+const PERIOD_LABELS: Record<number, string> = { 2: "6 oy", 1: "12 oy" };
 
 const inp =
   "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl outline-none bg-white transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-gray-400";
@@ -76,18 +76,18 @@ const OsagoResult = () => {
     setModalLoading(true);
     setModalError(null);
     try {
-      const contract: OsagoContractResponse = await osagoCreateContract({
-        calculationId: result.id,
-        startDate: form.startDate,
-        phoneNumber: form.phoneNumber.replace(/\D/g, ''),
-        owner: !result.individual
-          ? { organization: { inn: form.ownerInn } }
-          : { person: { passSeriya: form.ownerSeriya, passNumber: form.ownerNumber } },
-        drivers: result.limited
-          ? [{ passSeriya: form.passSeriya, passNumber: form.passNumber, birthDate: form.birthDate }]
-          : [],
-      });
-      navigate("/osago/payment", { state: { contract } });
+      // const contract: OsagoContractResponse = await osagoCreateContract({
+      //   calculationId: result.id,
+      //   startDate: form.startDate,
+      //   phoneNumber: form.phoneNumber.replace(/\D/g, ''),
+      //   owner: !result.individual
+      //     ? { organization: { inn: form.ownerInn } }
+      //     : { person: { passSeriya: form.ownerSeriya, passNumber: form.ownerNumber } },
+      //   drivers: result.limited
+      //     ? [{ passSeriya: form.passSeriya, passNumber: form.passNumber, birthDate: form.birthDate }]
+      //     : [],
+      // });
+      // navigate("/osago/payment", { state: { contract } });
     } catch (err: any) {
       setModalError(err?.response?.data?.error ?? "Ariza yuborishda xatolik yuz berdi.");
     } finally {
@@ -159,7 +159,7 @@ const OsagoResult = () => {
             <InfoCard icon={Hash} label="Davlat raqami" value={result.gosNumber} />
             <InfoCard icon={FileText} label="Texnik pasport" value={`${result.techSery} ${result.techNumber}`} />
             <InfoCard icon={Car} label="Transport turi" value={result.vehicleType} />
-            <InfoCard icon={Shield} label="Shaxs turi" value={ !result.individual ? "Yuridik shaxs" : "Jismoniy shaxs"} />
+            <InfoCard icon={Shield} label="Shaxs turi" value={!result.individual ? "Yuridik shaxs" : "Jismoniy shaxs"} />
           </div>
         </div>
 
