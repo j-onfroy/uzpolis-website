@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   CheckCircle2, ArrowLeft, ExternalLink, Calendar, Hash, Phone,
-  Clock, CreditCard, Wallet, Shield, Building2, Info, Copy,
+  Clock, CreditCard,  Shield, Building2, Info, Copy,
   Check, Home, Receipt, Smartphone, Landmark
 } from "lucide-react";
 import click from "@/assets/click.jpg";
@@ -13,9 +13,8 @@ import { useState, useEffect, useRef } from "react";
 import type { OsagoContractResponse, OsagoConfirmResponse } from "@/service/apis/osago.api";
 import { osagoConfirmPayment } from "@/service/apis/osago.api";
 import { AlertCircle, Loader2, X } from "lucide-react";
-import sqbLogo from "@/assets/sqb.png";
 
-const PERIOD_LABELS: Record<number, string> = { 1: "3 oy", 2: "12 oy" };
+const PERIOD_LABELS: Record<number, string> = { 2: "6 oy", 1: "12 oy" };
 
 const PaymentPage = () => {
   const { state } = useLocation() as { state: { contract: OsagoContractResponse } | null };

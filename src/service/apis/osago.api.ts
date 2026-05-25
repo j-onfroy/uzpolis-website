@@ -57,11 +57,8 @@ export interface OsagoContractRequest {
   identity: string;
   startDate: string;
   phoneNumber: string;
-  owner: {
-    person?: OsagoContractOwnerPerson;
-    organization?: { inn: string };
-  };
-  drivers: OsagoContractDriver[];
+  owner: any;
+  drivers: any[];
 }
 
 export const osagoPersonByDoc = async (body: {
