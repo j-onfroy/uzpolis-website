@@ -133,7 +133,8 @@ function DiscountRing({ value }: { value: number }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-[14px] font-bold text-[#1f4fd9]">
+      <span className="absolute inset-0 flex items-center justify-center  text-[12px] font-bold text-[#1f4fd9]">
+        
         {value}%
       </span>
     </div>
