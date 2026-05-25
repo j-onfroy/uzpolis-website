@@ -131,6 +131,7 @@ const InsuranceRegistration: React.FC = () => {
   const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([]);
   const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
   const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
+  const [contractError, setContractError] = useState<string | null>(null);
 
   const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate' | 'relative', val: string) => {
     setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
@@ -155,14 +156,15 @@ const InsuranceRegistration: React.FC = () => {
         birthDate: d.birthDate,
       });
       setDriverPersons((prev) => prev.map((p, i) => (i === idx ? person : p)));
-    } catch {
+    } catch (err) {
       setDriverPersons((prev) => prev.map((p, i) => (i === idx ? null : p)));
+      setContractError(err?.response?.data?.error ?? 'SMS yuborishda xatolik yuz berdi.');
+
     } finally {
       setDriverPersonLoading(null);
     }
   };
   const [contractLoading, setContractLoading] = useState(false);
-  const [contractError, setContractError] = useState<string | null>(null);
 
   // SMS verification
   const [showSmsModal, setShowSmsModal] = useState(false);
@@ -226,7 +228,7 @@ const InsuranceRegistration: React.FC = () => {
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
     (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) &&
-    (!isLimited || (driverEntries.length > 0 && driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate)));
+    (driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate));
 
   const handleCalculate = async () => {
     setCalcLoading(true);
@@ -267,7 +269,7 @@ const InsuranceRegistration: React.FC = () => {
       setContractLoading(false);
     }
   };
-
+   // create credit step 3
   const handleVerifyCode = async () => {
     if (!calcResult) return;
     setSmsLoading(true);
@@ -282,7 +284,7 @@ const InsuranceRegistration: React.FC = () => {
         owner: isJuridic
           ? { organization: { inn: ownerInn } }
           : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: driverEntries,
+        drivers: driverEntries.length ? driverEntries : [{ passSeriya: ownerSeriya, passNumber: ownerNumber }],
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
@@ -543,7 +545,7 @@ const InsuranceRegistration: React.FC = () => {
                       onClick={() => { setPhase('calculate'); setCalcResult(null); }}
                       className="text-xs flex items-center gap-1 text-blue-600 font-medium hover:underline"
                     >
-                     <Edit size={11}/> <span> O'zgartirish</span>
+                      <Edit size={11} /> <span> O'zgartirish</span>
                     </button>
                   </div>
                   <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -654,7 +656,7 @@ const InsuranceRegistration: React.FC = () => {
                               </div>
                               {(!isLimited || driverEntries.length > 1) && (
                                 <button type="button" onClick={() => removeDriver(idx)} className="text-xs text-red-400 hover:text-red-600">
-                                 <X />
+                                  <X />
                                 </button>
                               )}
                             </div>
@@ -721,9 +723,9 @@ const InsuranceRegistration: React.FC = () => {
                                 type="button"
                                 onClick={() => handleVerifyPerson(idx)}
                                 disabled={driverPersonLoading === idx}
-                                className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 disabled:opacity-60 transition"
+                                className="w-full flex items-center justify-center gap-2 py-2 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 disabled:opacity-60 transition"
                               >
-                                {driverPersonLoading === idx ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Qo\'shish'}
+                                {driverPersonLoading === idx ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : '+ Qo\'shish'}
                               </button>
                             )}
 
