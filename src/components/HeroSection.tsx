@@ -416,7 +416,6 @@ const HeroSection = () => {
             <br />
             rasmiylashtiring
           </h1>
-
           <p className="text-slate-600 text-[14px] md:text-lg mb-8 max-w-lg leading-relaxed">
             Bir nechta rasmiy sug'urtachilarning takliflarini bitta joyda solishtiring, eng yaxshi narxni tanlang va polisni 2 daqiqada onlayn xarid qiling.
           </p>

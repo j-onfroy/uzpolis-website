@@ -16,7 +16,6 @@ import {
   Loader2,
   ArrowRight,
   MessageCircle,
-  Trash2,
   X,
   Edit,
 } from 'lucide-react';
