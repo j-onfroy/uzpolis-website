@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   CheckCircle2, ArrowLeft, ExternalLink, Calendar, Hash, Phone,
-  Clock, CreditCard,  Shield, Building2, Info, Copy,
+  Clock, CreditCard, Shield, Building2, Info, Copy,
   Check, Home, Receipt, Smartphone, Landmark
 } from "lucide-react";
 import click from "@/assets/click.jpg";
@@ -19,11 +19,11 @@ const PERIOD_LABELS: Record<number, string> = { 2: "6 oy", 1: "12 oy" };
 const PaymentPage = () => {
   const { state } = useLocation() as { state: { contract: OsagoContractResponse } | null };
   const navigate = useNavigate();
-  const [copied, setCopied]               = useState(false);
-  const [confirmOpen, setConfirmOpen]     = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [confirmResult, setConfirmResult] = useState<OsagoConfirmResponse | null>(null);
-  const [confirmError, setConfirmError]   = useState<string | null>(null);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
   const paymentClicked = useRef(false);
 
   const contract = state?.contract;
@@ -121,33 +121,6 @@ const PaymentPage = () => {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-5">
-
-        {/* Success badge with animation */}
-        {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl px-5 py-4 animate-in fade-in slide-in-from-top-2 duration-500">
-          <div className="flex items-center gap-3">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-200">
-                <CheckCircle2 className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-green-800">Ariza muvaffaqiyatli yaratildi</p>
-            </div>
-            <p className="text-xs text-green-600 mt-0.5">Shartnoma raqami: #{contract.sqbContractId}</p>
-
-            <button
-              onClick={copyContractId}
-              className="flex-shrink-0 w-8 h-8 rounded-lg bg-white border border-green-200 flex items-center justify-center hover:bg-green-50 transition group"
-              title="Shartnoma raqamini nusxalash"
-            >
-              {copied ? (
-                <Check className="w-3.5 h-3.5 text-green-600" />
-              ) : (
-                <Copy className="w-3.5 h-3.5 text-green-600 group-hover:scale-105 transition" />
-              )}
-            </button>
-          </div>
-        </div> */}
         <div className="flex flex-col md:flex-row gap-5 items-start">
           {/* Contract details card — chap */}
           <div className="w-full md:flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -513,7 +486,7 @@ const PaymentPage = () => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };
