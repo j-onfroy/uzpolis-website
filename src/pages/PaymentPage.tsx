@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   CheckCircle2, ArrowLeft, ExternalLink, Calendar, Hash, Phone,
-  Clock, CreditCard, Shield, Building2, Info, Copy,
-  Check, Home, Receipt, Smartphone, Landmark
+  Clock, CreditCard, Shield, Info, Copy,
+  Check, Receipt
 } from "lucide-react";
 import click from "@/assets/click.jpg";
 import payme from "@/assets/payme.png";
