@@ -32,7 +32,7 @@ export default function FAQ() {
       <div className="max-w-[1216px] mx-auto px-4">
         <div className="grid md:grid-cols-[380px,1fr] gap-12">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-ink tracking-tight">
+            <h2 className="text-3xl md:text-[24px] font-bold text-ink tracking-tight">
               Ko'p so'raladigan savollar
             </h2>
             <p className="text-mute mt-4 leading-relaxed">

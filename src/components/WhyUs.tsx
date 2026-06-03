@@ -14,7 +14,7 @@ export default function WhyUs() {
     <section className="py-16 md:py-20 bg-bg">
       <div className="max-w-[1216px] mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-ink tracking-tight">Nima uchun uzpolis?</h2>
+          <h2 className="text-3xl md:text-[24px] font-bold text-ink tracking-tight">Nima uchun uzpolis?</h2>
           <p className="text-mute mt-3 max-w-lg mx-auto">
             O'zbekistondagi yetakchi online sug'urta platformasi
           </p>
