@@ -226,8 +226,8 @@ const InsuranceRegistration: React.FC = () => {
   const canSubmitContract =
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
-    (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) &&
-    (driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate));
+    (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) 
+    // (driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate));
 
   const handleCalculate = async () => {
     setCalcLoading(true);

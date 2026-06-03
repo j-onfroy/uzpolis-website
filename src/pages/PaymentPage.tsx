@@ -25,7 +25,7 @@ const PaymentPage = () => {
   const [confirmResult, setConfirmResult] = useState<OsagoConfirmResponse | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const paymentClicked = useRef(false);
-
+  const info = JSON.parse(localStorage.getItem("hero_form_values") ?? "{}");
   const contract = state?.contract;
 
   useEffect(() => {
@@ -83,12 +83,14 @@ const PaymentPage = () => {
 
   const calculateEndDate = (startDate: string, periodId: number) => {
     const [y, m, d] = startDate.split("-").map(Number);
-    const end = new Date(y, m - 1 + ({ 1: 3, 2: 12 }[periodId] ?? 12), d);
+    const monthsToAdd = periodId === 1 ? 12 : periodId === 2 ? 6 : 0;
+    const end = new Date(y, m - 1 + monthsToAdd, d);
     const ey = end.getFullYear();
     const em = String(end.getMonth() + 1).padStart(2, "0");
     const ed = String(end.getDate()).padStart(2, "0");
     return `${ed}-${em}-${ey}`;
-  };
+};
+
 
   const formatPhone = (phone: string) => {
     const digits = phone.replace(/\D/g, "");
@@ -178,7 +180,7 @@ const PaymentPage = () => {
                     {calculateEndDate(contract.startDate, contract.periodId)}
                   </span>
                   <p className="text-[14px] text-gray-400 mt-0.5">
-                    {PERIOD_LABELS[contract.periodId]} muddat
+                    {PERIOD_LABELS[info.OSAGO.period]} muddat
                   </p>
                 </div>
               </div>
