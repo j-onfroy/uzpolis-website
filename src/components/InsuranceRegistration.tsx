@@ -271,7 +271,7 @@ const InsuranceRegistration: React.FC = () => {
    // create credit step 3
   const handleVerifyCode = async () => {
     if (!calcResult) return;
-    setSmsLoading(true);
+    setContractLoading(true);
     setSmsError(null);
     try {
       // const { identity } = await osagoSmsVerify(formattedPhone, smsCode);
@@ -288,9 +288,9 @@ const InsuranceRegistration: React.FC = () => {
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
     } catch (err: any) {
-      setSmsError(err?.response?.data?.error ?? 'Kod noto\'g\'ri yoki muddati tugagan.');
+      setContractError(err?.response?.data?.error ?? 'Kod noto\'g\'ri yoki muddati tugagan.');
     } finally {
-      setSmsLoading(false);
+      setContractLoading(false);
     }
   };
 
