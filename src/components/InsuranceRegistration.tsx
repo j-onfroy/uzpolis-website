@@ -274,10 +274,10 @@ const InsuranceRegistration: React.FC = () => {
     setSmsLoading(true);
     setSmsError(null);
     try {
-      const { identity } = await osagoSmsVerify(formattedPhone, smsCode);
+      // const { identity } = await osagoSmsVerify(formattedPhone, smsCode);
       const contract = await osagoCreateContract({
         calculationId: calcResult.id,
-        identity,
+        // identity,
         startDate,
         phoneNumber: formattedPhone,
         owner: isJuridic
@@ -757,7 +757,7 @@ const InsuranceRegistration: React.FC = () => {
                         </button>
                       )}
                       <button
-                        onClick={handleSendSms}
+                        onClick={handleVerifyCode}
                         disabled={contractLoading || !canSubmitContract}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200"
                       >
@@ -768,6 +768,12 @@ const InsuranceRegistration: React.FC = () => {
                         )}
                       </button>
                     </div>
+                    {smsError && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 mt-3">
+                  <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                  <p className="text-xs text-red-600">{smsError}</p>
+                </div>
+              )}
                   </div>
                 </div>
               </>
@@ -966,7 +972,7 @@ const InsuranceRegistration: React.FC = () => {
             </button>
           ) : (
             <button
-              onClick={handleSendSms}
+              onClick={handleVerifyCode}
               disabled={contractLoading || !canSubmitContract}
               className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition"
             >
@@ -978,6 +984,7 @@ const InsuranceRegistration: React.FC = () => {
             </button>
           )}
         </div>
+        
       </div>
     </div>
   );
