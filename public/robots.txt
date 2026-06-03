@@ -1,17 +1,14 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: Telegrambot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+
+Disallow: /admin
+Disallow: /login
+Disallow: /user/login
+Disallow: /dashboard
+Disallow: /api
+Disallow: /profile
+Disallow: /osago/result
+Disallow: /osago/payment
+Disallow: /payment/callback
+
+Sitemap: https://uzpolis.uz/sitemap.xml
