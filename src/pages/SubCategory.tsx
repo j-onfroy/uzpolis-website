@@ -2,7 +2,7 @@ import { useSubUrlCategory } from "@/store/useCategory";
 import { Check, Loader, ArrowLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import empty from "@/assets/empty.webp";
-import defaultImg from "@/assets/default.jpg";
+import defaultImg from "@/assets/icons/doc.svg";
 
 const BADGE_STYLES: Record<string, string> = {
   "ENG ARZON": "bg-blue-100 text-blue-600",
@@ -42,64 +42,60 @@ export default function SubCategory() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Banner Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
+      <div className="relative bg-slate-900 overflow-hidden border-b border-slate-800">
+        {/* Orqa fondagi zamonaviy to'r (Grid) Pattern */}
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
+            backgroundImage: `linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)`,
+            backgroundSize: '24px 24px'
           }} />
         </div>
-        
-        {/* Decorative circles */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full filter blur-3xl opacity-20 animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500 rounded-full filter blur-3xl opacity-20" />
-        
-        <div className="relative max-w-7xl mx-auto px-4 py-6 md:py-12">
-          {/* Back Button */}
-         
-          {/* Header Content */}
+
+        {/* Zamonaviy Neon yog'du effektlari (Glow Effects) */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500 rounded-full filter blur-[128px] opacity-20 animate-pulse duration-4005" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-500 rounded-full filter blur-[128px] opacity-20" />
+
+        <div className="relative max-w-7xl mx-auto px-6 py-12 md:py-16 lg:py-20">
           <div className="text-center md:text-left">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-              <div className="space-y-3">
-                {/* Category Badge */}
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+
+              {/* Chap tomon: Matnlar qismi */}
+              <div className="space-y-4 max-w-3xl">
+                {/* Kategoriya Badge - Nozik shisha effekti bilan */}
                 {data.subName && (
-                  <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5">
-                    <span className="text-white/80 text-sm">{data.subName}</span>
+                  <div className="inline-flex items-center gap-2 bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-full px-3 py-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                    <span className="text-white/80 text-xs font-medium tracking-wide uppercase">{data.subName}</span>
                   </div>
                 )}
-                
-                {/* Main Title */}
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white">
+
+                {/* Asosiy Sarlavha - Katta va jozibali */}
+                <h1 className="text-[26px] md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none">
                   {data.name}
                 </h1>
-                
-                {/* Description */}
+
+                {/* Tavsif - Rang sal xiralashtirilgan, o'qishga qulay */}
                 {data.description && (
-                  <p className="text-white/90 text-base md:text-lg max-w-2xl mx-auto md:mx-0">
+                  <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto md:mx-0">
                     {data.description}
                   </p>
                 )}
               </div>
-              
-              {/* Optional Stats or CTA */}
-              <div className="flex gap-3">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-center">
-                  <div className="text-2xl font-bold text-white">
+
+              {/* O'ng tomon: Zamonaviy Statistika vidjeti */}
+              <div className="flex justify-center md:justify-end shrink-0">
+                {/* <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-5 min-w-[140px] text-center shadow-2xl shadow-black/20">
+                  <div className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
                     {data.subCategories?.length || 0}
                   </div>
-                </div>
+                </div> */}
+              </div>
+              <div>
+              {/* <img  src={defaultImg} width={340} className=" absolute bottom-[-30px] right-0 rotate-3" alt="" /> */}
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Curved bottom edge */}
-        {/* <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative h-8 w-full text-gray-50">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor"/>
-          </svg>
-        </div> */}
       </div>
 
       {/* Content Section */}
@@ -122,9 +118,8 @@ export default function SubCategory() {
             return (
               <div
                 key={index}
-                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl ${
-                  item.disabled ? "opacity-60" : "hover:-translate-y-1"
-                } ${isFeatured ? "ring-2 ring-blue-500 shadow-lg" : "border border-gray-100"}`}
+                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl ${item.disabled ? "opacity-60" : "hover:-translate-y-1"
+                  } ${isFeatured ? "ring-2 ring-blue-500 shadow-lg" : "border border-gray-100"}`}
               >
                 {/* Featured Badge */}
                 {isFeatured && (
@@ -176,7 +171,7 @@ export default function SubCategory() {
 
                   {/* Features */}
                   <div className="border-t border-gray-100 my-4" />
-                  
+
                   <div className="min-h-[100px]">
                     {features.length > 0 ? (
                       <ul className="space-y-2">

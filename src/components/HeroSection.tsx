@@ -409,14 +409,14 @@ const HeroSection = () => {
         }}
       >
         <div className="relative z-10 container mx-auto px-4 mt-10 md:px-20 md:pt-16 pb-8 flex flex-col flex-1">
-          <h1 className="text-[28px] sm:text-[40px] md:text-[5vw] font-extrabold text-[#0d1b4b] leading-tight mb-5 max-w-4xl">
+          <h1 className=" sm:text-[40px] md:text-[5vw] font-extrabold text-[#0d1b4b] leading-tight mb-5 max-w-4xl">
             Sug'urtani <span className="text-[#1f4fd9]">oson, tez</span>
             <br />
             va <span className="text-[#1f4fd9]">ishonchli</span>
             <br />
             rasmiylashtiring
           </h1>
-          <p className="text-slate-600 text-[14px] md:text-lg mb-8 max-w-lg leading-relaxed">
+          <p className="text-slate-600 text-[22px] md:text-lg mb-8 max-w-lg leading-relaxed">
             Bir nechta rasmiy sug'urtachilarning takliflarini bitta joyda solishtiring, eng yaxshi narxni tanlang va polisni 2 daqiqada onlayn xarid qiling.
           </p>
 

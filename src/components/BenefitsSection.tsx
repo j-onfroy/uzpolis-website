@@ -46,7 +46,7 @@ const BenefitsSection = () => {
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-4">
             {t("benefit.title1")}
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl md:text-[24px] lg:text-5xl font-bold text-foreground mb-6">
             {t("benefit.title2")}
 
             <span className="text-gradient"> {t("benefit.title2_1")}
