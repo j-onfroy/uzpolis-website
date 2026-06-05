@@ -730,15 +730,15 @@ const InsuranceRegistration: React.FC = () => {
                                   options={[
                                     { value: '0', label: 'Qarindosh emas' },
                                     { value: '1', label: 'Otasi' },
-                                    { value: '2', label: 'Onasi' },
-                                    { value: '3', label: 'Eri' },
-                                    { value: '4', label: 'Xotini' },
-                                    { value: '5', label: "O'g'li" },
-                                    { value: '6', label: 'Qizi' },
-                                    { value: '7', label: 'Akasi' },
-                                    { value: '8', label: 'Ukasi' },
-                                    { value: '9', label: 'Opasi' },
-                                    { value: '10', label: 'Singlisi' },
+                                    { value: '2', label: 'Akasi' },
+                                    { value: '3', label: 'Ukasi' },
+                                    { value: '4', label: 'Xotni' },
+                                    { value: '5', label: "Onasi" },
+                                    { value: '6', label: 'Eri' },
+                                    { value: '7', label: 'O\'g\'li' },
+                                    { value: '8', label: 'Qizi' },
+                                    { value: '9', label: 'Katta Opasi' },
+                                    { value: '10', label: 'Siglisi' },
                                   ]}
                                 />
                               </div>
