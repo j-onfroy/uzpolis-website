@@ -200,7 +200,7 @@ const CompanyList = () => {
           </div>
 
           {/* Coverage range */}
-          <div>
+          {/* <div>
             <p className="text-[14px] font-semibold text-muted-foreground tracking-widest uppercase mb-3">
                SUMMASI
             </p>
@@ -222,7 +222,7 @@ const CompanyList = () => {
               <span className="text-xs text-muted-foreground">{range[0]} mln</span>
               <span className="text-xs text-muted-foreground">{range[1]} mln</span>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* ── Company cards ── */}

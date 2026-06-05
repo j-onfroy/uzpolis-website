@@ -54,7 +54,7 @@ export interface OsagoContractOwnerPerson {
 
 export interface OsagoContractRequest {
   calculationId: string;
-  // identity: string;
+  isOwnerDriver:boolean;
   startDate: string;
   phoneNumber: string;
   owner: any;

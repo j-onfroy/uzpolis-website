@@ -115,7 +115,6 @@ const InsuranceRegistration: React.FC = () => {
   const [periodId, setPeriodId] = useState(1);
   const [limited, setLimited] = useState(false);
   const [drivers, setDrivers] = useState<number[]>([]);
-  const [driverInput, setDriverInput] = useState('');
   const [calcLoading, setCalcLoading] = useState(false);
   const [calcError, setCalcError] = useState<string | null>(null);
   const [calcResult, setCalcResult] = useState<OsagoCalculateResponse | null>(null);
@@ -131,6 +130,7 @@ const InsuranceRegistration: React.FC = () => {
   const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
   const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
   const [contractError, setContractError] = useState<string | null>(null);
+  const [isMainDriver, setIsMainDriver] = useState<string>('1');
 
   const updateDriver = (idx: number, field: 'passSeriya' | 'passNumber' | 'birthDate' | 'relative', val: string) => {
     setDriverEntries((prev) => prev.map((d, i) => (i === idx ? { ...d, [field]: val } : d)));
@@ -226,8 +226,8 @@ const InsuranceRegistration: React.FC = () => {
   const canSubmitContract =
     phoneNumber.replace(/\D/g, '').length === 12 &&
     !!startDate &&
-    (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7) 
-    // (driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate));
+    (isJuridic ? ownerInn.length >= 9 : ownerSeriya.length === 2 && ownerNumber.length === 7)
+  // (driverEntries.every((d) => d.passSeriya.length === 2 && d.passNumber.length === 7 && !!d.birthDate));
 
   const handleCalculate = async () => {
     setCalcLoading(true);
@@ -268,7 +268,7 @@ const InsuranceRegistration: React.FC = () => {
       setContractLoading(false);
     }
   };
-   // create credit step 3
+  // create credit step 3
   const handleVerifyCode = async () => {
     if (!calcResult) return;
     setContractLoading(true);
@@ -277,13 +277,14 @@ const InsuranceRegistration: React.FC = () => {
       // const { identity } = await osagoSmsVerify(formattedPhone, smsCode);
       const contract = await osagoCreateContract({
         calculationId: calcResult.id,
-        // identity,
+        isOwnerDriver: isMainDriver === '1',
         startDate,
         phoneNumber: formattedPhone,
         owner: isJuridic
           ? { organization: { inn: ownerInn } }
           : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: driverEntries.length ? driverEntries : [{ passSeriya: ownerSeriya, passNumber: ownerNumber }],
+        drivers: driverEntries.length ?  driverEntries : []
+        
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
@@ -612,7 +613,7 @@ const InsuranceRegistration: React.FC = () => {
                     ) : (
                       <>
                         <p className="text-xs font-semibold text-gray-500">Egasi pasporti</p>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-3 gap-3">
                           <div>
                             <label className={lbl}>Seriya</label>
                             <input
@@ -636,6 +637,18 @@ const InsuranceRegistration: React.FC = () => {
                               onChange={(e) => setOwnerNumber(e.target.value.replace(/\D/g, '').slice(0, 7))}
                             />
                           </div>
+                          <div>
+                            <CustomSelect
+                              label="Haydovchi sifatida qo'shish"
+                              value={isMainDriver}
+                              onChange={(val) => setIsMainDriver(val)}
+                              placeholder="Birinchi haydovchi"
+                              options={[
+                                { value: '1', label: 'Ha' },
+                                { value: '0', label: 'Yo\'q' },
+                              ]}
+                            />
+                          </div>
                         </div>
                       </>
                     )}
@@ -645,12 +658,26 @@ const InsuranceRegistration: React.FC = () => {
                         <p className="text-xs font-semibold text-gray-500">
                           Haydovchilar pasporti{isLimited ? '' : ' (ixtiyoriy)'}
                         </p>
-
+                        {isMainDriver === '1' &&
+                          <div className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold text-gray-600">1-haydovchi (egasi) {calcResult.owner}</span>
+                                {driverPersons[driverEntries.length] && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                              </div>
+                            </div>
+                          </div>
+                        }
                         {driverEntries.map((d, idx) => (
                           <div key={idx} className="border border-gray-100 rounded-xl p-3 space-y-3 bg-gray-50">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold text-gray-600">{idx + 1}-haydovchi</span>
+                                {isMainDriver === '1' ? (
+                                  <span className="text-xs font-semibold text-gray-600">{idx + 2}-haydovchi</span>
+                                ) : (
+                                  <span className="text-xs font-semibold text-gray-600"> {idx + 1}-haydovchi</span>
+                                )}
+
                                 {driverPersons[idx] && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
                               </div>
                               {(!isLimited || driverEntries.length > 1) && (
@@ -769,11 +796,11 @@ const InsuranceRegistration: React.FC = () => {
                       </button>
                     </div>
                     {smsError && (
-                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 mt-3">
-                  <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
-                  <p className="text-xs text-red-600">{smsError}</p>
-                </div>
-              )}
+                      <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5 mt-3">
+                        <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                        <p className="text-xs text-red-600">{smsError}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
@@ -984,7 +1011,7 @@ const InsuranceRegistration: React.FC = () => {
             </button>
           )}
         </div>
-        
+
       </div>
     </div>
   );
