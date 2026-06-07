@@ -38,7 +38,7 @@ const PaymentPage = () => {
         setConfirmResult(null);
         setConfirmError(null);
         setConfirmLoading(true);
-        osagoConfirmPayment(contract.sqbContractId)
+        osagoConfirmPayment(contract.id)
           .then((res) => setConfirmResult(res))
           .catch((err) =>
             setConfirmError(err?.response?.data?.error ?? "To'lov tasdiqlanmadi. Qayta urinib ko'ring.")
@@ -427,7 +427,7 @@ const PaymentPage = () => {
                         setConfirmResult(null);
                         setConfirmError(null);
                         setConfirmLoading(true);
-                        osagoConfirmPayment(contract.sqbContractId)
+                        osagoConfirmPayment(contract.id)
                           .then((res) => setConfirmResult(res))
                           .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
                           .finally(() => setConfirmLoading(false));
@@ -471,7 +471,7 @@ const PaymentPage = () => {
                         setConfirmError(null);
                         setConfirmResult(null);
                         setConfirmLoading(true);
-                        osagoConfirmPayment(contract.sqbContractId)
+                        osagoConfirmPayment(contract.id)
                           .then((res) => setConfirmResult(res))
                           .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
                           .finally(() => setConfirmLoading(false));
