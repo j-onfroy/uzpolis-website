@@ -25,9 +25,17 @@ import { CustomSelect } from '@/components/ui/CustomSelect';
 const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
 
 const RELATIVE_LABELS: Record<string, string> = {
-  '1': 'Otasi', '2': 'Onasi', '3': 'Eri',
-  '4': 'Xotini', '5': "O'g'li", '6': 'Qizi', '7': 'Akasi',
-  '8': 'Ukasi', '9': 'Opachasi', '10': 'Singlisi', '0': 'Qarindosh emas'
+  '0': 'Qarindosh emas',
+  '1': 'Otasi',
+  '2': 'Akasi',
+  '3': 'Ukasi',
+  '4': 'Xotni',
+  '5': "Onasi",
+  '6': 'Eri',
+  '7': 'O\'g\'li',
+  '8': 'Qizi',
+  '9': 'Katta Opasi',
+  '10': 'Siglisi',
 };
 
 const PERSON_FIELD_LABELS: Record<string, string> = {
@@ -283,8 +291,8 @@ const InsuranceRegistration: React.FC = () => {
         owner: isJuridic
           ? { organization: { inn: ownerInn } }
           : { person: { passSeriya: ownerSeriya, passNumber: ownerNumber } },
-        drivers: driverEntries.length ?  driverEntries : []
-        
+        drivers: driverEntries.length ? driverEntries : []
+
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
