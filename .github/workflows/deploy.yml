@@ -44,18 +44,18 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/uzpolis 
             
-            # 1. GitHub Registry'ga login (PAT orqali)
-            sudo docker login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GH_PAT }}
+            # 1. GitHub Registry'ga login (GITHUB_TOKEN orqali)
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             # 2. Yangi imajni majburan tortib olish
-            sudo docker-compose pull uzpolis-web
+            docker compose pull uzpolis-web
             
             # 3. Konteynerni majburan o'chirib, yangidan yaratish (Muhim joyi shu!)
-            sudo docker-compose up -d --force-recreate uzpolis-web
+            docker compose up -d --force-recreate uzpolis-web
             
             # 4. Keraksiz eski imajlarni tozalash
-            sudo docker image prune -f
+            docker image prune -f
