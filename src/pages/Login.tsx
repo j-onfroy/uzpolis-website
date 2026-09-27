@@ -15,9 +15,9 @@ function Login() {
     const { mutate: verifyOtp, isPending: pendingOtp, data: dataVerify } = useAuthVerify({
         onSuccess: (res) => {
             if (res.data) {
-                toast.success(res.message)
-                localStorage.setItem("token", res?.data?.accessToken)
-                localStorage.setItem("refresh", res?.data?.accessToken)
+                toast.success(res.message ?? "")
+                localStorage.setItem("token", res.data.accessToken)
+                localStorage.setItem("refresh", res.data.refreshToken)
                 localStorage.setItem("user", JSON.stringify(res?.data?.user))
                 nav("/profile")
             }

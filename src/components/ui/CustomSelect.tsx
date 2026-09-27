@@ -201,7 +201,7 @@ export function CustomSelect({
       {/* Trigger */}
       <div
         ref={triggerRef}
-        onClick={() => { if (disabled) return; open ? close() : openDropdown(); }}
+        onClick={() => { if (disabled) return; if (open) close(); else openDropdown(); }}
         className="w-full flex items-center justify-between px-3 py-2.5 text-sm border rounded-xl bg-white transition-all duration-150 outline-none select-none"
         style={{
           borderColor: error ? '#ef4444' : open ? '#2563eb' : '#e5e7eb',

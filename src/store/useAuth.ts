@@ -1,4 +1,4 @@
-import { loginOtp, otpVerify } from "@/service/apis/auth.api";
+import { loginOtp, otpVerify, type ApiResponse, type AuthTokens } from "@/service/apis/auth.api";
 import { useMutation } from "@tanstack/react-query";
 
 export const useAuth = () => {
@@ -8,8 +8,8 @@ export const useAuth = () => {
 };
 
 type UseAuthVerifyOptions = {
-    onSuccess?: (data: any) => void;
-    onError?: (error: any) => void;
+    onSuccess?: (data: ApiResponse<AuthTokens>) => void;
+    onError?: (error: Error) => void;
   };
   
 export const useAuthVerify = (options?: UseAuthVerifyOptions) => {

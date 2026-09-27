@@ -19,9 +19,10 @@ import {
   X,
   Edit,
 } from 'lucide-react';
-import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osagoPersonByDoc, type OsagoCalculateResponse } from '@/service/apis/osago.api';
+import { osagoCalculate, osagoCreateContract, osagoSmsSend, osagoSmsVerify, osagoPersonByDoc, type OsagoCalculateResponse, type OsagoPerson } from '@/service/apis/osago.api';
 import { CustomSelect } from '@/components/ui/CustomSelect';
 
+import { getApiErrorMessage } from "@/lib/api-error";
 const PERIOD_LABELS: Record<number, string> = { 2: '6 oy', 1: '12 oy' };
 
 const RELATIVE_LABELS: Record<string, string> = {
@@ -72,13 +73,24 @@ const GENDER_MAP: Record<string, string> = {
   F: 'Ayol', f: 'Ayol', FEMALE: 'Ayol', female: 'Ayol', '2': 'Ayol',
 };
 
+type InsuranceRegistrationState = {
+  calcResult?: OsagoCalculateResponse;
+  formData?: {
+    gosNumber?: string;
+    techSery?: string;
+    techNumber?: string;
+    periodId?: number;
+    limited?: boolean;
+  };
+};
+
 const SKIP_FIELDS = new Set([
   'fullName', 'pnfl', 'pinfl', 'inn', 'photo', 'image', 'avatar',
   'regionId', 'districtId', 'isPassportExpired',
   'startDate', 'endDate', 'issuedBy', 'birthCountry', 'birthPlace',
 ]);
 
-function formatPersonValue(key: string, val: any): string {
+function formatPersonValue(key: string, val: unknown): string {
   if (key === 'gender') return GENDER_MAP[String(val)] ?? String(val);
   return String(val ?? '—');
 }
@@ -134,7 +146,7 @@ const InsuranceRegistration: React.FC = () => {
   const [ownerNumber, setOwnerNumber] = useState('');
   const [ownerInn, setOwnerInn] = useState('');
   const [driverEntries, setDriverEntries] = useState<{ passSeriya: string; passNumber: string; birthDate: string; relative: string }[]>([]);
-  const [driverPersons, setDriverPersons] = useState<(Record<string, any> | null)[]>([]);
+  const [driverPersons, setDriverPersons] = useState<(OsagoPerson | null)[]>([]);
   const [driverPersonLoading, setDriverPersonLoading] = useState<number | null>(null);
   const [expandedDrivers, setExpandedDrivers] = useState<Set<number>>(new Set());
   const [contractError, setContractError] = useState<string | null>(null);
@@ -165,7 +177,7 @@ const InsuranceRegistration: React.FC = () => {
       setDriverPersons((prev) => prev.map((p, i) => (i === idx ? person : p)));
     } catch (err) {
       setDriverPersons((prev) => prev.map((p, i) => (i === idx ? null : p)));
-      setContractError(err?.response?.data?.error ?? 'SMS yuborishda xatolik yuz berdi.');
+      setContractError(getApiErrorMessage(err, 'SMS yuborishda xatolik yuz berdi.'));
 
     } finally {
       setDriverPersonLoading(null);
@@ -252,8 +264,8 @@ const InsuranceRegistration: React.FC = () => {
       setCalcResult(result);
       setPhase('contract');
       window.scrollTo(0, 0);
-    } catch (err: any) {
-      setCalcError(err?.response?.data?.error ?? 'Hisoblashda xatolik yuz berdi.');
+    } catch (err) {
+      setCalcError(getApiErrorMessage(err, 'Hisoblashda xatolik yuz berdi.'));
     } finally {
       setCalcLoading(false);
     }
@@ -270,8 +282,8 @@ const InsuranceRegistration: React.FC = () => {
       setSmsCode('');
       setSmsError(null);
       setShowSmsModal(true);
-    } catch (err: any) {
-      setContractError(err?.response?.data?.error ?? 'SMS yuborishda xatolik yuz berdi.');
+    } catch (err) {
+      setContractError(getApiErrorMessage(err, 'SMS yuborishda xatolik yuz berdi.'));
     } finally {
       setContractLoading(false);
     }
@@ -296,8 +308,8 @@ const InsuranceRegistration: React.FC = () => {
       });
       setShowSmsModal(false);
       navigate('/osago/payment', { state: { contract } });
-    } catch (err: any) {
-      setContractError(err?.response?.data?.error ?? 'Kod noto\'g\'ri yoki muddati tugagan.');
+    } catch (err) {
+      setContractError(getApiErrorMessage(err, 'Kod noto\'g\'ri yoki muddati tugagan.'));
     } finally {
       setContractLoading(false);
     }
@@ -311,7 +323,7 @@ const InsuranceRegistration: React.FC = () => {
   ];
   useEffect(() => {
     window.scrollTo(0, 0);
-    const state = location.state as any;
+    const state = location.state as InsuranceRegistrationState | null;
     if (state?.calcResult) {
       setCalcResult(state.calcResult);
       setPhase('contract');
@@ -874,7 +886,8 @@ const InsuranceRegistration: React.FC = () => {
                           onClick={() =>
                             setExpandedDrivers((prev) => {
                               const s = new Set(prev);
-                              s.has(idx) ? s.delete(idx) : s.add(idx);
+                              if (s.has(idx)) s.delete(idx);
+                              else s.add(idx);
                               return s;
                             })
                           }

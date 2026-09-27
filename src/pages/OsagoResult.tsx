@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { osagoCreateContract, type OsagoCalculateResponse, type OsagoContractResponse } from "@/service/apis/osago.api";
 
+import { getApiErrorMessage } from "@/lib/api-error";
 const PERIOD_LABELS: Record<number, string> = { 2: "6 oy", 1: "12 oy" };
 
 const inp =
@@ -52,6 +53,10 @@ const OsagoResult = () => {
     birthDate: "",
   });
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (!result) {
     return (
       <div className="min-h-screen bg-[#f5f7fb] flex items-center justify-center">
@@ -88,8 +93,8 @@ const OsagoResult = () => {
       //     : [],
       // });
       // navigate("/osago/payment", { state: { contract } });
-    } catch (err: any) {
-      setModalError(err?.response?.data?.error ?? "Ariza yuborishda xatolik yuz berdi.");
+    } catch (err) {
+      setModalError(getApiErrorMessage(err, "Ariza yuborishda xatolik yuz berdi."));
     } finally {
       setModalLoading(false);
     }
@@ -101,10 +106,6 @@ const OsagoResult = () => {
     (!result.individual ? form.ownerInn.length >= 9 : form.ownerSeriya.length >= 2 && form.ownerNumber.length >= 7) &&
     (!result.limited || (form.passSeriya.length >= 2 && form.passNumber.length >= 7 && form.birthDate));
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-
-  }, [])
   return (
     <div className="min-h-[110vh] bg-[#f5f7fb] pb-10">
       {/* Page header */}

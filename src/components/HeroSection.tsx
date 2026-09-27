@@ -6,6 +6,7 @@ import bgImage from "@/assets/home/home.png";
 import { osagoCalculate } from "@/service/apis/osago.api";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 
+import { getApiErrorMessage } from "@/lib/api-error";
 type FieldType = "text" | "plate" | "select" | "date" | "number";
 
 // ── Formatters ──────────────────────────────────────────────────────────────
@@ -389,8 +390,8 @@ const HeroSection = () => {
             },
           },
         });
-      } catch (err: any) {
-        setApiError(err?.response?.data?.error ?? "Xatolik yuz berdi. Qayta urinib ko'ring.");
+      } catch (err) {
+        setApiError(getApiErrorMessage(err, "Xatolik yuz berdi. Qayta urinib ko'ring."));
       } finally {
         setLoading(false);
       }
