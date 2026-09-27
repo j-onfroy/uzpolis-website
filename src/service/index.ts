@@ -1,63 +1,35 @@
-// import axios, { AxiosRequestHeaders } from "axios";
-// const api = axios.create({
-//   baseURL: "https://api.uzpolis.uz",
-// });
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
-// // request interceptor
-
-// api.interceptors.request.use(
-//   (config) => {
-//     const lang = window.localStorage.getItem("language");
-//     const token = localStorage.getItem("token");
-//     if (token) {
-//       config.headers.set('Authorization', `Bearer ${token}`);
-//     }
-//     config.headers['Accept-Language'] = lang
-//     return config;
-//   },
-//   (error) => {
-//     console.log(error);
-//     return Promise.reject(error); // You should return a rejected promise here
-//   }
-// );
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     // const message =
-//     //   error?.error || t("error_msg");
-
-//     // show toast
-//     // toast.error(message);
-
-//     // optional: handle auth error
-//     if (error.response?.status === 401) {
-//       localStorage.removeItem("token");
-//       localStorage.removeItem("user");
-//       window.location.href = "/user/login";
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-// export default api;
-import axios from "axios";
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "https://api.uzpolis.uz";
 
 const api = axios.create({
-  baseURL: "https://api.uzpolis.uz",
+  baseURL: API_BASE_URL,
 });
 
-let isRefreshing = false;
-let failedQueue: any[] = [];
+type QueuedRequest = {
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+};
 
-const processQueue = (error: any, token: string | null = null) => {
+type RetriableRequest = InternalAxiosRequestConfig & { _retry?: boolean };
+
+type RefreshResponse = {
+  success: boolean;
+  data: { accessToken: string; refreshToken: string };
+};
+
+let isRefreshing = false;
+let failedQueue: QueuedRequest[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
-    if (error) prom.reject(error);
+    if (error || !token) prom.reject(error);
     else prom.resolve(token);
   });
   failedQueue = [];
 };
 
-// ✅ REQUEST
+// REQUEST
 api.interceptors.request.use(
   (config) => {
     const lang = localStorage.getItem("language");
@@ -68,9 +40,8 @@ api.interceptors.request.use(
     }
 
     if (lang) {
-      // config.headers["Accept-Language"] = lang;
-      config.headers["Accept-Language"] = 'uz';
-
+      // Backend content is currently served in Uzbek only.
+      config.headers["Accept-Language"] = "uz";
     }
 
     return config;
@@ -78,17 +49,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 🔁 RESPONSE (REFRESH LOGIC HERE)
+// RESPONSE — transparently refresh an expired access token and replay the request
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RetriableRequest | undefined;
 
-    // ❌ if unauthorized
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // if already refreshing → queue requests
+      // A refresh is already in flight — queue this request until it finishes
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({
@@ -106,26 +76,23 @@ api.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("refresh");
 
-        // 🔥 CALL REFRESH API
-        const res = await axios.post(
-          "https://api.uzpolis.uz/api/v1/auth/refresh",
-          { refreshToken }
-        );
+        const res = await axios.post<RefreshResponse>(`${API_BASE_URL}/api/v1/auth/refresh`, {
+          refreshToken,
+        });
 
-        const newAccessToken = res.data.accessToken;
+        const { accessToken, refreshToken: newRefreshToken } = res.data.data;
 
-        // save new token
-        localStorage.setItem("token", newAccessToken);
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("refresh", newRefreshToken);
 
-        processQueue(null, newAccessToken);
+        processQueue(null, accessToken);
 
-        // retry original request
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
 
-        // ❌ logout if refresh fails
+        // Refresh failed — log the user out
         localStorage.removeItem("token");
         localStorage.removeItem("refresh");
         localStorage.removeItem("user");
