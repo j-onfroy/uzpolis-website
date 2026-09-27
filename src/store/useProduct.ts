@@ -43,7 +43,7 @@ type ProductInfoRes = {
             maxCoverage: number
             vehicleTypes: string[]
             durationMonths: number[]
-            types:any;
+            types?: string[];
         }
         category: Category
         subCategory: SubCategory

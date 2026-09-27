@@ -18,7 +18,7 @@ type Product = {
     durationMonths?: number[];
     deductible?: number;
     coverageTypes?: string[];
-  } | any;
+  } & Record<string, unknown>;
   provider: { name: string; logoUrl: string };
 };
 

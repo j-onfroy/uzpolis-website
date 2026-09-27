@@ -5,7 +5,7 @@ export const getUsers = async () => {
   return data;
 };
 
-export const createUser = async (payload: any) => {
+export const createUser = async (payload: Record<string, unknown>) => {
   const { data } = await api.post("/users", payload);
   return data;
 };

@@ -52,20 +52,26 @@ export interface OsagoContractOwnerPerson {
   passNumber: string;
 }
 
+export type OsagoContractOwner =
+  | { organization: { inn: string } }
+  | { person: OsagoContractOwnerPerson };
+
+export type OsagoPerson = Record<string, unknown> & { fullName?: string };
+
 export interface OsagoContractRequest {
   calculationId: string;
   isOwnerDriver:boolean;
   startDate: string;
   phoneNumber: string;
-  owner: any;
-  drivers: any[];
+  owner: OsagoContractOwner;
+  drivers: OsagoContractDriver[];
 }
 
 export const osagoPersonByDoc = async (body: {
   passportSeries: string;
   passportNumber: string;
   birthDate: string;
-}): Promise<Record<string, any>> => {
+}): Promise<OsagoPerson> => {
   const { data } = await api.post('/api/v1/osago/person/by-doc', body);
   return data.data ?? data;
 };
@@ -101,6 +107,7 @@ export interface OsagoContractResponse {
   createdAt: string;
   paymeUrl: string;
   clickUrl: string;
+  paymentDeadline?: string;
 }
 
 export const osagoCreateContract = async (body: OsagoContractRequest): Promise<OsagoContractResponse> => {

@@ -1,4 +1,4 @@
-import { Home, Grid2X2, User } from "lucide-react";
+import { Home, Grid2X2, User, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 type Types = {
     id: string;
     label: string;
-    icon: any;
+    icon: LucideIcon;
     link: string;
 }
 

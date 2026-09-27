@@ -12,7 +12,7 @@ function DropLang() {
         { value: 'ru', label: 'Русский' },
         { value: 'en', label: 'English' },
     ]
-    const onChangeLanguage = (value: any) => {
+    const onChangeLanguage = (value: string) => {
         i18n.changeLanguage(value);
         localStorage.setItem("language", value);
         queryClient.invalidateQueries();

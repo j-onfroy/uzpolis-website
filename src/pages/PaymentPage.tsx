@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import click from "@/assets/click.jpg";
 import payme from "@/assets/payme.png";
+import { getApiErrorMessage } from "@/lib/api-error";
 // Add FileText icon if not already imported
 import { FileText } from "lucide-react";
 
@@ -41,7 +42,7 @@ const PaymentPage = () => {
         osagoConfirmPayment(contract.id)
           .then((res) => setConfirmResult(res))
           .catch((err) =>
-            setConfirmError(err?.response?.data?.error ?? "To'lov tasdiqlanmadi. Qayta urinib ko'ring.")
+            setConfirmError(getApiErrorMessage(err, "To'lov tasdiqlanmadi. Qayta urinib ko'ring."))
           )
           .finally(() => setConfirmLoading(false));
       }
@@ -225,13 +226,13 @@ const PaymentPage = () => {
               </div>
 
               {/* Additional info if available */}
-              {(contract as any).paymentDeadline && (
+              {contract.paymentDeadline && (
                 <div className="bg-amber-50 rounded-xl p-3 border border-amber-200">
                   <div className="flex items-start gap-2">
                     <Info className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-xs font-semibold text-amber-800">To'lov muddati</p>
-                      <p className="text-xs text-amber-700 mt-0.5">{(contract as any).paymentDeadline}</p>
+                      <p className="text-xs text-amber-700 mt-0.5">{contract.paymentDeadline}</p>
                     </div>
                   </div>
                 </div>
@@ -429,7 +430,7 @@ const PaymentPage = () => {
                         setConfirmLoading(true);
                         osagoConfirmPayment(contract.id)
                           .then((res) => setConfirmResult(res))
-                          .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
+                          .catch((err) => setConfirmError(getApiErrorMessage(err, "Xatolik yuz berdi.")))
                           .finally(() => setConfirmLoading(false));
                       }}
                       className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition"
@@ -473,7 +474,7 @@ const PaymentPage = () => {
                         setConfirmLoading(true);
                         osagoConfirmPayment(contract.id)
                           .then((res) => setConfirmResult(res))
-                          .catch((err) => setConfirmError(err?.response?.data?.error ?? "Xatolik yuz berdi."))
+                          .catch((err) => setConfirmError(getApiErrorMessage(err, "Xatolik yuz berdi.")))
                           .finally(() => setConfirmLoading(false));
                       }}
                       className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition"
